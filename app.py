@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+import sqlalchemy as sa
 from config import Config
 from urllib.parse import urlparse
 from flask import request, render_template
@@ -18,9 +19,34 @@ from models import *
 
 @app.route("/")
 def index():
-    articles = Article.query.order_by(Article.published_at.desc()).all()
-    return render_template('index.html', title='Home', articles=articles)
+    articles = Article.query.order_by(Article.published_at.desc()).limit(15)
+    return render_template(
+        'index.html',
+        title='Home',
+        articles=articles,
+        article_counts=get_article_counts())
 
+
+@app.route("/date/<int:year>-<int:month>-<int:day>")
+def index_filtered_by_date(year, month, day):
+    date = f"{year}-{month:02d}-{day:02d}"
+    articles = Article.query.filter(sa.func.strftime("%Y-%m-%d", Article.published_at) == date).all()
+    return render_template(
+        'index.html',
+        title=date,
+        date=date,
+        articles=articles,
+        article_counts=get_article_counts())
+
+
+def get_article_counts():
+    article_counts = (db.session
+                      .query(
+        sa.func.strftime("%Y-%m-%d", Article.published_at).label('date'),
+        sa.func.count(Article.id).label('count'))
+                      .group_by(sa.func.strftime("%Y-%m-%d", Article.published_at))
+                      .all())
+    return article_counts
 
 @app.route("/articles", methods=['POST'])
 def save_articles():

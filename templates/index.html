@@ -3,16 +3,46 @@
 {% block content %}
 {{ moment.include_moment() }}
 
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar/index.global.min.js'></script>
+    <script>
 
+      document.addEventListener('DOMContentLoaded', function() {
+        const calendarEl = document.getElementById('calendar')
+        const calendar = new FullCalendar.Calendar(calendarEl, {
+          initialView: 'dayGridMonth',
+          events: [
+            {% for article_count in article_counts %}
+            {
+              title: '{{ article_count.count }}',
+              start: '{{ article_count.date }}',
+              url: '/date/{{ article_count.date }}'
+            },
+            {% endfor %}
+          ]
+        })
+        calendar.render()
+      })
+
+    </script>
     <div id='calendar'></div>
+<style>
+    #calendar {
+        max-width: 900px;
+        margin: 50px auto;
+    }
+</style>
 
 
-    <h2>Today's articles!</h2>
+{% if date %}
+<h2>Articles from {{ date }}</h2>
+{% else %}
+    <h2>Latest articles!</h2>
+{% endif %}
     {% for article in articles %}
     <div>
         <h3><a href="{{ article.url }}">{{ article.title }}</a></h3>
         <p>{{ moment(article.published_at).format('LLL') }}</p>
-        <p>{{ article.content|safe }}</p>
+        <p>{{ article.content|safe }} (<i>{{ article.domain }}</i>)</p>
         </div>
     {% endfor %}
 {% endblock %}
