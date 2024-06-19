@@ -1,0 +1,15 @@
+<!doctype html>
+<html>
+    <head>
+      {% if title %}
+      <title>{{ title }} - Disinfo Digest</title>
+      {% else %}
+      <title>Welcome to Disinfo Digest</title>
+      {% endif %}
+    </head>
+    <body>
+        <div>Disinfo Digest: <a href="/">Home</a></div>
+        <hr>
+        {% block content %}{% endblock %}
+    </body>
+</html>

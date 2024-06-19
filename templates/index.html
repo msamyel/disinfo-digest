@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+{{ moment.include_moment() }}
+
+
+    <div id='calendar'></div>
+
+
+    <h2>Today's articles!</h2>
+    {% for article in articles %}
+    <div>
+        <h3><a href="{{ article.url }}">{{ article.title }}</a></h3>
+        <p>{{ moment(article.published_at).format('LLL') }}</p>
+        <p>{{ article.content|safe }}</p>
+        </div>
+    {% endfor %}
+{% endblock %}
