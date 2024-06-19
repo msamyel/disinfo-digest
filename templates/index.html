@@ -34,15 +34,15 @@
 
 
 {% if date %}
-<h2>Articles from {{ date }}</h2>
+    <h2>Articles from {{ date }}</h2>
 {% else %}
     <h2>Latest articles!</h2>
 {% endif %}
     {% for article in articles %}
-    <div>
-        <h3><a href="{{ article.url }}">{{ article.title }}</a></h3>
-        <p>{{ moment(article.published_at).format('LLL') }}</p>
-        <p>{{ article.content|safe }} (<i>{{ article.domain }}</i>)</p>
-        </div>
+    <article>
+        <h3 class="article__title"><a href="{{ article.url }}">{{ article.title }}</a></h3>
+        <p class="article__published_at">{{ moment(article.published_at).format('LLL') }}</p>
+        <p class="article__content">{{ article.content|safe }} (<span class="article__domain">{{ article.domain }}</span>)</p>
+        </article>
     {% endfor %}
 {% endblock %}

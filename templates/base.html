@@ -6,10 +6,20 @@
       {% else %}
       <title>Welcome to Disinfo Digest</title>
       {% endif %}
+
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+
     </head>
     <body>
-        <div>Disinfo Digest: <a href="/">Home</a></div>
+        <header>Disinfo Digest: <a href="/" class="header__link">Home</a></header>
         <hr>
+        <main>
         {% block content %}{% endblock %}
+        </main>
+    <footer>
+        <hr>
+        <p>Disinfo Digest is a project by <a href="https://github.com/jvetvicka">Jiri Vetvicka</a> and <a href="https://github.com/msamyel">Matej Voslar</a></p>
+    </footer>
     </body>
 </html>
