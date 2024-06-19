@@ -5,6 +5,8 @@ from dateutil.parser import parse as dateparse
 import pytz
 import json
 import os
+import requests
+import dotenv
 
 # Funkce pro kontrolu, zda článek obsahuje daná klíčová slova
 def contains_keywords(text, keywords):
@@ -166,18 +168,28 @@ if __name__ == "__main__":
     start_date = datetime(2024, 6, 14, tzinfo=pytz.UTC)
     end_date = datetime(2024, 6, 16, 23, 59, 59, tzinfo=pytz.UTC)
 
+    new_articles = []
+    for feed_url in feeds:
+        new_articles.extend(fetch_and_filter_rss(feed_url, start_date, end_date))
+
+    # send articles by POST request
+    dotenv.load_dotenv()
+    post_url = os.getenv('POST_ARTICLES_URL')
+    requests.post(post_url, json=new_articles)
+
+
     # Název souboru s kompletním obsahem RSS kanálů
-    rss_content_file = "rss-obsah.json"
+    # rss_content_file = "rss-obsah.json"
 
     # Aktualizace obsahu RSS kanálů ve souboru
-    updated_rss_content = update_rss_content_file(feeds, rss_content_file, start_date, end_date)
+    # updated_rss_content = update_rss_content_file(feeds, rss_content_file, start_date, end_date)
 
     # Filtrování a zobrazení článků s klíčovými slovy
-    filtered_articles = [article for article in updated_rss_content if contains_keywords(article['content'], keywords)]
+    # filtered_articles = [article for article in updated_rss_content if contains_keywords(article['content'], keywords)]
     
     # Vytvoření názvu souboru pro filtrované články
-    file_name_suffix = start_date.strftime("%d-%m") + "-" + end_date.strftime("%d-%m") + ".json"
-    filtered_articles_file = "filtered_articles_" + file_name_suffix
+    # file_name_suffix = start_date.strftime("%d-%m") + "-" + end_date.strftime("%d-%m") + ".json"
+    # filtered_articles_file = "filtered_articles_" + file_name_suffix
 
     # Uložení a zobrazení filtrovaných článků
-    save_and_display_articles(filtered_articles, filtered_articles_file)
+    # save_and_display_articles(filtered_articles, filtered_articles_file)

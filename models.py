@@ -5,7 +5,7 @@ class Article(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String, nullable=False)
     domain = db.Column(db.String, nullable=False)
-    url = db.Column(db.String, nullable=False)
+    url = db.Column(db.String, nullable=False, unique=True)
     media_url = db.Column(db.String, nullable=True)
     content = db.Column(db.Text, nullable=True)
     hashtags = db.Column(db.String, nullable=True)
