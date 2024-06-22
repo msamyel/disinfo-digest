@@ -104,6 +104,11 @@ def get_article_counts():
 
 @app.route("/articles", methods=['POST'])
 def save_articles():
+    headers = request.headers
+    auth = headers.get("X-Api-Key")
+    if auth != app.config['API_SECRET']:
+        return "ERROR: Unauthorized", 401
+
     rss_content = request.get_json()
     for article in rss_content:
         parsed_uri = urlparse(article['link'])
