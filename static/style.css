@@ -31,8 +31,8 @@ header ul {
 main {
     max-width: 80vw;
     margin: 0 auto;
+    min-height: 80vh;
 }
-
 
 h3 {
     color: #f0f0f0;

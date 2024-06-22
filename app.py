@@ -130,6 +130,9 @@ def save_articles():
     db.session.commit()
     return "Articles saved!"
 
+@app.route("/changelog")
+def changelog():
+    return render_template('changelog.html', title='Changelog')
 
 @app.cli.command('init-db')
 def init_db():
