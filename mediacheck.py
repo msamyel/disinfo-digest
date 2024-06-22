@@ -1,6 +1,6 @@
 import feedparser
 from bs4 import BeautifulSoup
-from datetime import datetime
+from datetime import datetime, timedelta
 import time
 from dateutil.parser import parse as dateparse
 import pytz
@@ -176,8 +176,11 @@ if __name__ == "__main__":
     ]
 
     # Datumové rozmezí (datumy s časovou zónou UTC)
-    start_date = datetime(2024, 6, 14, tzinfo=pytz.UTC)
-    end_date = datetime(2024, 6, 16, 23, 59, 59, tzinfo=pytz.UTC)
+    now = datetime.now().astimezone(pytz.UTC)
+    start_date = now - timedelta(hours=4)
+    end_date = now
+
+    print(now, start_date, end_date)
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=NUM_THREADS) as executor:
         executor.map(
@@ -186,14 +189,17 @@ if __name__ == "__main__":
             [start_date] * len(feeds),
             [end_date] * len(feeds))
 
+    filtered_results = filtered_articles = [article for article in results if contains_keywords(article['content'], keywords)]
+    print(*filtered_results)
+
     # with open('articles.json', 'w') as f:
-    #     json.dump(results, f, ensure_ascii=False, indent=4)
+    #     json.dump(filtered_results, f, ensure_ascii=False, indent=4)
 
     # send articles by POST request
     dotenv.load_dotenv()
     post_url = os.getenv('POST_ARTICLES_URL')
     api_secret = os.getenv('API_SECRET')
-    res = requests.post(post_url, json=results, headers={'X-Api-Key': api_secret})
+    res = requests.post(post_url, json=filtered_results, headers={'X-Api-Key': api_secret})
     print(res.status_code, res.content)
     #
 
@@ -204,7 +210,7 @@ if __name__ == "__main__":
     # updated_rss_content = update_rss_content_file(feeds, rss_content_file, start_date, end_date)
 
     # Filtrování a zobrazení článků s klíčovými slovy
-    # filtered_articles = [article for article in updated_rss_content if contains_keywords(article['content'], keywords)]
+    #
     
     # Vytvoření názvu souboru pro filtrované články
     # file_name_suffix = start_date.strftime("%d-%m") + "-" + end_date.strftime("%d-%m") + ".json"
