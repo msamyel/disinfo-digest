@@ -21,7 +21,7 @@
 
     <div class="search-container">
         <form action="/" method="get">
-            <input type="text" placeholder="Search..." name="search_query" value="{{search_query}}">
+            <input type="text" placeholder="Search..." name="search_query" value="{{search_query if search_query }}">
             <input type="date" name="search_from" value="{{search_from}}">
             <input type="date" name="search_until" value="{{search_until}}">
             <button type="submit">Search</button>
