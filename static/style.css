@@ -11,6 +11,14 @@ header {
     text-align: center;
 }
 
+header ul {
+    display: flex;
+    justify-content: center;
+    list-style-type: none;
+    padding: 0;
+    gap: 4rem;
+}
+
 .header__link {
     color: #f0f0f0;
     text-decoration: none;
@@ -37,6 +45,10 @@ h2.week_id, h3.week_id {
 h3.date_divider {
     padding-top: 5rem;
     margin-bottom: 2.5rem;
+}
+
+h3.date_divider:nth-of-type(1) {
+    padding-top: 1.5rem;
 }
 
 main a {
@@ -96,7 +108,49 @@ footer a:hover {
     color: #999;
 }
 
-    #calendar {
-        max-width: 900px;
-        margin: 50px auto;
-    }
+#calendar {
+    max-width: 900px;
+    margin: 50px auto;
+}
+
+.search-container {
+    background-color: #1e1e1e;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    max-width: 500px;
+    margin: 0 auto;
+      color-scheme: dark;
+
+}
+
+form {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+input[type="text"], input[type="date"] {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #2e2e2e;
+    color: #ffffff;
+}
+
+input[type="text"]::placeholder {
+    color: #888888;
+}
+
+button {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #6200ea;
+    color: #ffffff;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #3700b3;
+}

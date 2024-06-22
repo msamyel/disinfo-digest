@@ -32,7 +32,7 @@
     <h2 class="week_id">{{ moment(start_day).format('DD. MMMM') }} – {{ moment(end_day).format('DD. MMMM') }} </h2>
 <h3 class="week_id">Rok {{ year }}, týden {{ week }}.</h3>
 {% else %}
-    <h2>Nejnovější články</h2>
+    <h2 class="week_id">Nejnovější články</h2>
 {% endif %}
     {% set ns = namespace(day='') %}
     {% for article in articles %}
