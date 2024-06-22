@@ -1,12 +1,17 @@
 import feedparser
 from bs4 import BeautifulSoup
-from datetime import datetime, timedelta
+from datetime import datetime
+import time
 from dateutil.parser import parse as dateparse
 import pytz
 import json
 import os
 import requests
 import dotenv
+import concurrent.futures
+
+NUM_THREADS = 5
+results = []
 
 # Funkce pro kontrolu, zda článek obsahuje daná klíčová slova
 def contains_keywords(text, keywords):
@@ -84,6 +89,12 @@ def display_articles(articles):
         print(f"Title: {article['title']}")
         print(f"Link: {article['link']}")
         print()
+
+
+def scrape_feed_to_results(feed_url, start_date, end_date):
+    print(f'scraping feed {feed_url} at {time.strftime("%H:%M:%S", time.gmtime())}')
+    results.extend(fetch_and_filter_rss(feed_url, start_date, end_date))
+    print(f'done scraping feed {feed_url} at {time.strftime("%H:%M:%S", time.gmtime())}')
 
 # Hlavní program
 if __name__ == "__main__":
@@ -168,15 +179,23 @@ if __name__ == "__main__":
     start_date = datetime(2024, 6, 14, tzinfo=pytz.UTC)
     end_date = datetime(2024, 6, 16, 23, 59, 59, tzinfo=pytz.UTC)
 
-    new_articles = []
-    for feed_url in feeds:
-        new_articles.extend(fetch_and_filter_rss(feed_url, start_date, end_date))
+    with concurrent.futures.ThreadPoolExecutor(max_workers=NUM_THREADS) as executor:
+        executor.map(
+            scrape_feed_to_results,
+            feeds,
+            [start_date] * len(feeds),
+            [end_date] * len(feeds))
+
+    # with open('articles.json', 'w') as f:
+    #     json.dump(results, f, ensure_ascii=False, indent=4)
 
     # send articles by POST request
     dotenv.load_dotenv()
     post_url = os.getenv('POST_ARTICLES_URL')
-    requests.post(post_url, json=new_articles)
-
+    api_secret = os.getenv('API_SECRET')
+    res = requests.post(post_url, json=results, headers={'X-Api-Key': api_secret})
+    print(res.status_code, res.content)
+    #
 
     # Název souboru s kompletním obsahem RSS kanálů
     # rss_content_file = "rss-obsah.json"
