@@ -27,15 +27,27 @@
 
     </script>
 
-{% if articles %}
+
+{% if not articles %}
+    <div class="heading-container">
+        <h2 class="week_id">Žádné články</h2>
+    </div>
+{% else %}
 {% if is_search %}
+        <div class="heading-container">
     <h2 class="week_id">Výsledky vyhledávání</h2>
+        </div>
 {% elif date %}
+        <div class="heading-container">
     <h2 class="week_id">{{ moment(start_day).format('DD. MMMM') }} – {{ moment(end_day).format('DD. MMMM') }} </h2>
 <h3 class="week_id">Rok {{ year }}, týden {{ week }}.</h3>
+                </div>
 {% else %}
+        <div class="heading-container">
     <h2 class="week_id">Nejnovější články</h2>
+    </div>
 {% endif %}
+
     {% set ns = namespace(day='') %}
     {% for article in articles %}
         {% if article.published_at_cet_str != ns.day %}
@@ -58,8 +70,6 @@
             </p>
         </article>
     {% endfor %}
-{% else %}
-    <h2 class="week_id">Žádné články</h2>
 {% endif %}
 </main>
 <hr class="calendar-divider">
