@@ -83,8 +83,7 @@ article {
 }
 
 .article__content__read_more {
-    margin-top: 0.5rem;
-    font-size: 125%;
+    text-decoration: underline;
 }
 
 .article__meta {
@@ -111,6 +110,10 @@ footer a:hover {
 #calendar {
     max-width: 900px;
     margin: 50px auto;
+}
+
+.calendar-divider {
+    margin-top: 2rem;
 }
 
 .search-container {

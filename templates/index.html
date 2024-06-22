@@ -3,7 +3,7 @@
 {% block content %}
 {{ moment.include_moment() }}
 {{ moment.lang('cs') }}
-
+<main>
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar/index.global.min.js'></script>
     <script>
 
@@ -27,8 +27,10 @@
 
     </script>
 
-
-{% if date %}
+{% if articles %}
+{% if is_search %}
+    <h2 class="week_id">Výsledky vyhledávání</h2>
+{% elif date %}
     <h2 class="week_id">{{ moment(start_day).format('DD. MMMM') }} – {{ moment(end_day).format('DD. MMMM') }} </h2>
 <h3 class="week_id">Rok {{ year }}, týden {{ week }}.</h3>
 {% else %}
@@ -52,10 +54,14 @@
                 <span class="article__domain">{{ article.domain }}</span>
             </p>
             <p class="article__content">{{ article.content|safe }}
-            <span class="article__content article__content__read_more"><a target="_blank" href="{{ article.url }}">Číst dále...</a></span>
+            <span class="article__content article__content__read_more"><a target="_blank" href="{{ article.url }}">Číst&nbsp;dále...</a></span>
             </p>
         </article>
     {% endfor %}
-
-    <div id='calendar'></div>
+{% else %}
+    <h2 class="week_id">Žádné články</h2>
+{% endif %}
+</main>
+<hr class="calendar-divider">
+<div id='calendar'></div>
 {% endblock %}

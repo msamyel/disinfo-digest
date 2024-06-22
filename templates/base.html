@@ -21,18 +21,15 @@
 
     <div class="search-container">
         <form action="/" method="get">
-            <input type="text" placeholder="Search..." name="search">
-            <input type="date" name="start-date">
-            <input type="date" name="end-date">
+            <input type="text" placeholder="Search..." name="search_query" value="{{search_query}}">
+            <input type="date" name="search_from" value="{{search_from}}">
+            <input type="date" name="search_until" value="{{search_until}}">
             <button type="submit">Search</button>
         </form>
     </div>
 
 </header>
-<hr>
-<main>
     {% block content %}{% endblock %}
-</main>
 <footer>
     <hr>
     <p>Disinfo Digest is a project by <a href="https://github.com/jvetvicka">Jiri Vetvicka</a> and <a

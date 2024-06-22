@@ -20,15 +20,46 @@ from models import *
 
 @app.route("/")
 def index():
+    search_query = request.args.get('search_query')
+    search_from = request.args.get('search_from')
+    search_until = request.args.get('search_until')
 
+    if search_from or search_until or search_query:
+        articles = get_filtered_articles(search_query, search_from, search_until)
+        is_search = True
+    else:
+        articles = get_newest_articles()
+        is_search = False
 
-
-    articles = Article.query.order_by(Article.published_at_cet.desc()).limit(15)
     return render_template(
         'index.html',
         title='Home',
         articles=articles,
-        article_counts=get_article_counts())
+        article_counts=get_article_counts(),
+        is_search=is_search,
+        search_query=search_query,
+        search_from=search_from,
+        search_until=search_until)
+
+
+def get_newest_articles():
+    return Article.query.order_by(Article.published_at_cet.desc()).limit(15)
+
+
+def get_filtered_articles(search_query, start_at, end_at):
+    articles = Article.query.order_by(Article.published_at_cet.desc())
+    if search_query:
+        articles = articles.filter(
+            sa.or_(
+                Article.content.contains(search_query),
+                Article.title.contains(search_query)
+            )
+        )
+    if start_at:
+        articles = articles.filter(Article.published_at_cet >= start_at)
+    if end_at:
+        articles = articles.filter(Article.published_at_cet <= end_at)
+    return articles.all()
 
 
 @app.route("/date/<int:year>-<int:month>-<int:day>")
