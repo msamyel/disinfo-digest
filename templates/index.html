@@ -15,7 +15,7 @@
           events: [
             {% for article_count in article_counts %}
             {
-              title: '{{ article_count.count }}',
+              title: '{{ article_count.count }} článků',
               start: '{{ article_count.date }}',
               url: '/date/{{ article_count.date }}#{{ article_count.date }}'
             },
