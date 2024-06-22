@@ -21,12 +21,31 @@ header {
 }
 
 main {
-    padding: 20px;
+    max-width: 80vw;
+    margin: 0 auto;
 }
 
-h2 {
+
+h3 {
     color: #f0f0f0;
+}
+
+h2.week_id, h3.week_id {
     text-align: center;
+}
+
+h3.date_divider {
+    padding-top: 5rem;
+    margin-bottom: 2.5rem;
+}
+
+main a {
+    color: #f0f0f0;
+    text-decoration: none;
+}
+
+main a:hover {
+    color: #999;
 }
 
 article {
@@ -39,15 +58,7 @@ article {
 .article__title {
     color: #f0f0f0;
     font-size: 1.5em;
-}
-
-.article__title a {
-    color: #f0f0f0;
-    text-decoration: none;
-}
-
-.article__title a:hover {
-    color: #999;
+    margin: 0.5rem 0 0.5rem 0;
 }
 
 .article__published_at {
@@ -59,16 +70,12 @@ article {
     color: #f0f0f0;
 }
 
-.article__content a {
-    color: #f0f0f0;
-    text-decoration: none;
+.article__content__read_more {
+    margin-top: 0.5rem;
+    font-size: 125%;
 }
 
-.article__content a:hover {
-    color: #999;
-}
-
-.article__domain {
+.article__meta {
     color: #999;
     font-size: 0.8em;
 }
@@ -88,3 +95,8 @@ footer a {
 footer a:hover {
     color: #999;
 }
+
+    #calendar {
+        max-width: 900px;
+        margin: 50px auto;
+    }
