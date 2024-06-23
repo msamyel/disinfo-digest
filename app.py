@@ -120,6 +120,10 @@ def save_articles():
         year, week_number, day = date_cet_timezoneless.isocalendar()
         date_cet_str = date_cet_timezoneless.strftime("%Y-%m-%d")
 
+        existing_article = Article.query.filter_by(url=article['link']).first()
+        if existing_article:
+            continue
+
         new_article = Article(
             title=article['title'],
             domain=domain,
