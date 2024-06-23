@@ -9,7 +9,7 @@ import datetime
 import pytz
 from flask_moment import Moment
 from flask_caching import Cache
-
+from models import *
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -18,7 +18,6 @@ db = SQLAlchemy(app)
 moment = Moment(app)
 cache = Cache(app)
 
-from models import *
 
 @app.route("/")
 def index():
@@ -72,7 +71,6 @@ def index_filtered_by_date(year, month, day):
     start_day, end_day = get_start_and_end_date_from_calendar_week(year, week_number)
 
     date = f"{year}-{month:02d}-{day:02d}"
-    # articles = Article.query.filter(sa.func.strftime("%Y-%m-%d", Article.published_at_cet) == date).all()
     articles = (Article.query
                 .filter(Article.week == week_number, Article.year == year)
                 .order_by(Article.published_at_cet.desc())
@@ -142,9 +140,11 @@ def save_articles():
     db.session.commit()
     return "Articles saved!"
 
+
 @app.route("/changelog")
 def changelog():
     return render_template('changelog.html', title='Changelog')
+
 
 @app.cli.command('init-db')
 def init_db():
