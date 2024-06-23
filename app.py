@@ -8,6 +8,7 @@ import dateutil.parser
 import datetime
 import pytz
 from flask_moment import Moment
+from flask_caching import Cache
 
 
 app = Flask(__name__)
@@ -15,6 +16,7 @@ app.config.from_object(Config)
 db = SQLAlchemy(app)
 # js library for localizing time
 moment = Moment(app)
+cache = Cache(app)
 
 from models import *
 
@@ -93,6 +95,7 @@ def get_start_and_end_date_from_calendar_week(year, calendar_week):
     return monday, monday + datetime.timedelta(days=6.9)
 
 
+@cache.cached(timeout=7200, key_prefix='article_counts')
 def get_article_counts():
     article_counts = (db.session
                       .query(
