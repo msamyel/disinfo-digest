@@ -44,7 +44,12 @@ def index():
 
 
 def get_newest_articles():
-    return Article.query.order_by(Article.published_at_cet.desc()).limit(15)
+    now = datetime.datetime.now().astimezone(pytz.timezone("CET")).replace(tzinfo=None)
+    week_ago = now - datetime.timedelta(days=7)
+    return (Article.query
+            .filter(Article.published_at_cet >= week_ago)
+            .order_by(Article.published_at_cet.desc())
+            .all())
 
 
 def get_filtered_articles(search_query, start_at, end_at):
