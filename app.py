@@ -9,7 +9,6 @@ import datetime
 import pytz
 from flask_moment import Moment
 from flask_caching import Cache
-from models import *
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -18,6 +17,7 @@ db = SQLAlchemy(app)
 moment = Moment(app)
 cache = Cache(app)
 
+from models import *
 
 @app.route("/")
 def index():
