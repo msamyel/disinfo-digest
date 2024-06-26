@@ -48,12 +48,12 @@ def get_newest_articles():
     week_ago = now - datetime.timedelta(days=7)
     return (Article.exclude_hidden()
             .filter(Article.published_at_cet >= week_ago)
-            .order_by(Article.published_at_cet.desc())
+            .order_by(Article.published_at_cet_str.desc(), Article.id.desc())
             .all())
 
 
 def get_filtered_articles(search_query, start_at, end_at):
-    articles = Article.exclude_hidden().order_by(Article.published_at_cet.desc())
+    articles = Article.exclude_hidden().order_by(Article.published_at_cet_str.desc(), Article.id.desc())
     if search_query:
         articles = articles.filter(
             sa.or_(
@@ -78,7 +78,7 @@ def index_filtered_by_date(year, month, day):
     date = f"{year}-{month:02d}-{day:02d}"
     articles = (Article.exclude_hidden()
                 .filter(Article.week == week_number, Article.year == year)
-                .order_by(Article.published_at_cet.desc())
+                .order_by(Article.published_at_cet.desc(), Article.id.desc())
                 .all())
     return render_template(
         'index.html',
