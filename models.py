@@ -14,6 +14,12 @@ class Article(db.Model):
     year = db.Column(db.Integer, nullable=False)
     week = db.Column(db.Integer, nullable=False)
     day = db.Column(db.Integer, nullable=False)
+    is_hidden = db.Column(db.Boolean, nullable=False, default=False)
 
     def __repr__(self):
         return f'<Article {self.title}>'
+
+    @staticmethod
+    def exclude_hidden():
+        # must use == instead of is because of the SQLAlchemy ORM
+        return Article.query.filter(Article.is_hidden == False)

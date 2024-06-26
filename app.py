@@ -46,14 +46,14 @@ def index():
 def get_newest_articles():
     now = datetime.datetime.now().astimezone(pytz.timezone("CET")).replace(tzinfo=None)
     week_ago = now - datetime.timedelta(days=7)
-    return (Article.query
+    return (Article.exclude_hidden()
             .filter(Article.published_at_cet >= week_ago)
             .order_by(Article.published_at_cet.desc())
             .all())
 
 
 def get_filtered_articles(search_query, start_at, end_at):
-    articles = Article.query.order_by(Article.published_at_cet.desc())
+    articles = Article.exclude_hidden().order_by(Article.published_at_cet.desc())
     if search_query:
         articles = articles.filter(
             sa.or_(
@@ -76,7 +76,7 @@ def index_filtered_by_date(year, month, day):
     start_day, end_day = get_start_and_end_date_from_calendar_week(year, week_number)
 
     date = f"{year}-{month:02d}-{day:02d}"
-    articles = (Article.query
+    articles = (Article.exclude_hidden()
                 .filter(Article.week == week_number, Article.year == year)
                 .order_by(Article.published_at_cet.desc())
                 .all())
@@ -104,6 +104,7 @@ def get_article_counts():
                       .query(
         sa.func.strftime("%Y-%m-%d", Article.published_at_cet).label('date'),
         sa.func.count(Article.id).label('count'))
+                      .filter(Article.is_hidden == False)
                       .group_by(sa.func.strftime("%Y-%m-%d", Article.published_at_cet))
                       .all())
     return article_counts
@@ -139,12 +140,30 @@ def save_articles():
             published_at_cet_str=date_cet_str,
             year=year,
             week=week_number,
-            day=day
+            day=day,
+            is_hidden=False
         )
         db.session.add(new_article)
     db.session.commit()
-    return "Articles saved!"
+    return "Articles saved!", 200
 
+
+@app.route("/articles/hide", methods=['POST'])
+def hide_articles():
+    headers = request.headers
+    auth = headers.get("X-Api-Key")
+    if auth != app.config['API_SECRET']:
+        return "ERROR: Unauthorized", 401
+
+    urls_to_hide = request.get_json()
+    for url in urls_to_hide:
+        article = Article.query.filter_by(url=url).first()
+        if article:
+            article.is_hidden = True
+            db.session.add(article)
+
+    db.session.commit()
+    return "ok", 200
 
 @app.route("/changelog")
 def changelog():
