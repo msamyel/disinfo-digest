@@ -102,10 +102,10 @@ def get_start_and_end_date_from_calendar_week(year, calendar_week):
 def get_article_counts():
     article_counts = (db.session
                       .query(
-        sa.func.strftime("%Y-%m-%d", Article.published_at_cet).label('date'),
+        Article.published_at_cet_str.label('date'),
         sa.func.count(Article.id).label('count'))
                       .filter(Article.is_hidden == False)
-                      .group_by(sa.func.strftime("%Y-%m-%d", Article.published_at_cet))
+                      .group_by(Article.published_at_cet_str)
                       .all())
     return article_counts
 
