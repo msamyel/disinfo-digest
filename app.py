@@ -72,7 +72,7 @@ def get_filtered_articles(search_query, start_at, end_at):
 def index_filtered_by_date(year, month, day):
     # get isoweek from month and day
     date = dateutil.parser.parse(f'{year}-{month}-{day}')
-    year, week_number, day = date.isocalendar()
+    year, week_number, week_day = date.isocalendar()
     start_day, end_day = get_start_and_end_date_from_calendar_week(year, week_number)
 
     date = f"{year}-{month:02d}-{day:02d}"
