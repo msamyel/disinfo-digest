@@ -9,7 +9,7 @@ class Article(db.Model):
     media_url = db.Column(db.String, nullable=True)
     content = db.Column(db.Text, nullable=True)
     hashtags = db.Column(db.String, nullable=True)
-    published_at_cet = db.Column(db.String, nullable=False)
+    published_at_cet = db.Column(db.DateTime, nullable=False)
     published_at_cet_str = db.Column(db.String, nullable=False)
     year = db.Column(db.Integer, nullable=False)
     week = db.Column(db.Integer, nullable=False)
