@@ -5,6 +5,8 @@
 {{ moment.lang('cs') }}
 <main>
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar/index.global.min.js'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.42/moment-timezone-with-data.min.js"></script>
+
     <script>
 
       document.addEventListener('DOMContentLoaded', function() {
@@ -39,7 +41,9 @@
         </div>
 {% elif date %}
         <div class="heading-container">
-    <h2 class="week_id">{{ moment(start_day).format('DD. MMMM') }} – {{ moment(end_day).format('DD. MMMM') }} </h2>
+    <h2 class="week_id"><span class="date-to-format" data-date="{{start_day}}" data-format="DD. MMMM">></span>
+        –
+        <span class="date-to-format" data-date="{{end_day}}" data-format="DD. MMMM"></span></h2>
 <h3 class="week_id">Rok {{ year }}, týden {{ week }}.</h3>
                 </div>
 {% else %}
@@ -52,9 +56,12 @@
     {% for article in articles %}
         {% if article.published_at_cet_str != ns.day %}
             <h3 class="date_divider">
-                <a id="{{ article.published_at_cet_str }}" href="#{{ article.published_at_cet_str }}">
-                    {{ moment(article.published_at_cet).format('dddd LL') }}
-                </a>
+                <a
+                        id="{{ article.published_at_cet_str }}"
+                        href="#{{ article.published_at_cet_str }}"
+                        class="date-to-format"
+                        data-date="{{ article.published_at_cet}}"
+                        data-format="dddd LL"></a>
             </h3>
             {% set ns.day = article.published_at_cet_str %}
         {% endif %}
@@ -62,7 +69,7 @@
             <h4 class="article__title"><a target="_blank" href="{{ article.url }}">{{ article.title|safe }}</a></h4>
 
             <p class="article__meta">
-                {{ moment(article.published_at_cet).format('dddd LL') }},
+                <span class="date-to-format" data-date="{{ article.published_at_cet }}" data-format="dddd LL"></span>,
                 <span class="article__domain">{{ article.domain }}</span>
             </p>
             <p class="article__content">{{ article.content|safe }}
@@ -74,4 +81,21 @@
 </main>
 <hr class="calendar-divider">
 <div id='calendar'></div>
+<!-- transform all dates with the class "date-to-format" using moment.js -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Select all elements with the class "date-to-format"
+            var elements = document.querySelectorAll('.date-to-format');
+
+            elements.forEach(function(element) {
+                var date = element.getAttribute('data-date');
+                var format = element.getAttribute('data-format');
+
+                var dateInCET = moment(date).tz('Europe/Berlin');
+                var formattedDate = dateInCET.format(format);
+
+                element.textContent = formattedDate;
+            });
+        });
+    </script>
 {% endblock %}
