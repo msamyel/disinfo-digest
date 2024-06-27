@@ -125,16 +125,17 @@ footer a:hover {
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-    max-width: 500px;
+    width: fit-content;
     margin: 0 auto;
-      color-scheme: dark;
-
+    color-scheme: dark;
 }
 
 form {
     display: flex;
     flex-direction: row;
     gap: 10px;
+    justify-content: center;
+    width: fit-content;
 }
 
 input[type="text"], input[type="date"] {
