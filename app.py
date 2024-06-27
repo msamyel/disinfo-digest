@@ -34,7 +34,6 @@ def index():
 
     return render_template(
         'index.html',
-        title='Home',
         articles=articles,
         article_counts=get_article_counts(),
         is_search=is_search,

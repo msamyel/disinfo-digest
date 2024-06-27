@@ -2,27 +2,28 @@
 <html>
 <head>
     {% if title %}
-    <title>{{ title }} - Disinfo Digest</title>
+    <title>{{ title }} - KyberZprávy</title>
     {% else %}
-    <title>Welcome to Disinfo Digest</title>
+    <title>KyberZprávy</title>
     {% endif %}
 
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='kz_favico_tp.png') }}">
 </head>
 <body>
 <header>
-    <h1>Disinfo Digest</h1>
+    <h1>KyberZprávy.cz</h1>
     <ul>
-        <li><a href="/" class="header__link">Home</a></li>
+        <li><a href="/" class="header__link">Domů</a></li>
         <li><a href="/changelog" class="header__link">Changelog</a></li>
     </ul>
 
     <div class="search-container">
         <form action="/" method="get">
-            <input type="text" placeholder="Search..." name="search_query" value="{{search_query if search_query }}">
+            <input type="text" placeholder="Hledat..." name="search_query" value="{{search_query if search_query }}">
             <input type="date" name="search_from" value="{{search_from}}">
             <input type="date" name="search_until" value="{{search_until}}">
-            <button type="submit">Search</button>
+            <button type="submit">Hledat</button>
         </form>
     </div>
 
@@ -30,8 +31,8 @@
     {% block content %}{% endblock %}
 <footer>
     <hr>
-    <p>O chod webu se starají <a href="https://github.com/jvetvicka">Jiří Větvička</a> a <a
-            href="https://github.com/msamyel">Matěj Voslař</a>.</p>
+    <p>O chod webu se starají <a href="https://jvetvicka.github.io/">Jiří Větvička</a> a <a
+            href="https://matejvi.cz/">Matěj Voslař</a>.</p>
 </footer>
 </body>
 </html>
