@@ -55,12 +55,12 @@ h3.date_divider:nth-of-type(1) {
     padding-top: 1.5rem;
 }
 
-main a {
+main a, header a {
     color: #f0f0f0;
     text-decoration: none;
 }
 
-main a:hover {
+main a:hover, header a:hover {
     color: #999;
 }
 
