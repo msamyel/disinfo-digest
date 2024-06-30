@@ -3,6 +3,7 @@
 {% block content %}
 {{ moment.include_moment() }}
 {{ moment.lang('cs') }}
+<div class="flex-container">
 <main>
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar/index.global.min.js'></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.42/moment-timezone-with-data.min.js"></script>
@@ -69,18 +70,29 @@
             <h4 class="article__title"><a target="_blank" href="{{ article.url }}">{{ article.title|safe }}</a></h4>
 
             <p class="article__meta">
-                <span class="date-to-format" data-date="{{ article.published_at_cet }}" data-format="dddd LL"></span>,
-                <span class="article__domain">{{ article.domain }}</span>
+                <i class="fas fa-calendar"></i> <span class="date-to-format" data-date="{{ article.published_at_cet }}" data-format="dddd LL"></span>
+                <i class="fa-solid fa-link"></i></i> <span class="article__domain">{{ article.domain }}</span>
+                <i class="fas fa-tags"></i> <span class="article__category">dezinformace</span>{{ article.category }}
             </p>
             <p class="article__content">{{ article.content|safe }}
-            <span class="article__content article__content__read_more"><a target="_blank" href="{{ article.url }}">Číst&nbsp;dále...</a></span>
+            <span class="article__content article__content__read_more"><a target="_blank" href="{{ article.url }}">Číst&nbsp;dále <i class="fa-solid fa-angle-right"></i></a></span>
             </p>
         </article>
     {% endfor %}
 {% endif %}
 </main>
-<hr class="calendar-divider">
-<div id='calendar'></div>
+<aside>
+    <a class="post-tag btn btn-outline-primary" href="/tags/facebook/">propaganda</a>
+    <a class="post-tag btn btn-outline-primary" href="/tags/gork/">dezinformace</a>
+    <a class="post-tag btn btn-outline-primary" href="/tags/in-progress/">cenzura</a>
+    <a class="post-tag btn btn-outline-primary" href="/tags/m%C3%A9dia/">média</a>
+    <a class="post-tag btn btn-outline-primary" href="/tags/nez%C3%A1visl%C3%A9-zpravodajstv%C3%AD/">nezávislé zpravodajství</a>
+    <a class="post-tag btn btn-outline-primary" href="/tags/telegram/">telegram</a>
+    <a class="post-tag btn btn-outline-primary" href="/tags/x/">Elon Musk</a>
+    <div id='calendar'></div>
+</aside>
+</div>
+
 <!-- transform all dates with the class "date-to-format" using moment.js -->
     <script>
         document.addEventListener("DOMContentLoaded", function() {
