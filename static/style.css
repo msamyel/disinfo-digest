@@ -1,8 +1,7 @@
 body {
-    background-color: #121212;
+    background-color: #1a1a1a;
     color: #f0f0f0;
-    font-family: "Open Sans", sans-serif;
-    margin: 0;
+    font-family: Arial, sans-serif;
 }
 
 header {
@@ -16,47 +15,31 @@ header ul {
     display: flex;
     justify-content: center;
     list-style-type: none;
-    align-items: center;
     padding: 0;
     gap: 4rem;
-    margin: 0 auto;
 }
 
 .header__link {
     color: #f0f0f0;
     text-decoration: none;
-    font-size: 16px;
-    text-transform: uppercase;
-    font-weight: 600;
 }
 
 .header__link:hover {
-    color: #00ffc9;
-}
-
-.flex-container {
-    display: flex;
-    max-width: 1450px;
-    margin: 0 auto;
-    gap: 20px;
+    color: #999;
 }
 
 main {
+    max-width: 80vw;
+    margin: 0 auto;
     min-height: 80vh;
-    flex: 3;
 }
 
 .heading-container {
     text-align: center;
 }
 
-h1, h2, h3, h4 {
-    font-family: "Roboto", sans-serif;
-}
-
 h3 {
     color: #f0f0f0;
-    padding-left: 10px;
 }
 
 h2.week_id, h3.week_id {
@@ -65,15 +48,11 @@ h2.week_id, h3.week_id {
 
 h3.date_divider {
     padding-top: 5rem;
-    /* margin-bottom: 2.5rem; */
+    margin-bottom: 2.5rem;
 }
 
 h3.date_divider:nth-of-type(1) {
     padding-top: 1.5rem;
-}
-
-h3.date_divider a {
-    color: #00ffc9;
 }
 
 main a, header a {
@@ -86,20 +65,16 @@ main a:hover, header a:hover {
 }
 
 article {
-    background-color: #333;
+    background-color: #2a2a2a;
     border-radius: 5px;
+    margin: 10px;
     padding: 10px;
-    margin-bottom: 15px;
 }
 
 .article__title {
     color: #f0f0f0;
     font-size: 1.5em;
     margin: 0.5rem 0 0.5rem 0;
-}
-
-.article__title a {
-    
 }
 
 .article__published_at {
@@ -111,42 +86,13 @@ article {
     color: #f0f0f0;
 }
 
-.article__content__read_more a {
-    color: #03ae84;
-    font-size: 0.8em;
+.article__content__read_more {
+    text-decoration: underline;
 }
 
-.article__content__read_more a:hover {
-    color: #03ae84;
-}
-
-.article__content__read_more{
-    position: relative; /* Potřebné pro umístění šipky relativně k textu */
-    display: inline-block;
-  }
-  
-.article__content__read_more i {
-    transition: all 0.3s ease; /* Nastavení animace */
-}
- 
-.article__content__read_more:hover i {
-    transform: translateX(5px); /* Pohyb šipky doprava při najetí */
-}
-  
 .article__meta {
     color: #999;
     font-size: 0.8em;
-}
-
-.article__meta .article__category {
-    color: #03ae84;
-    text-transform: uppercase;
-
-}
-
-aside {
-    flex: 1;
-    padding: 20px;
 }
 
 footer {
@@ -154,7 +100,6 @@ footer {
     color: #f0f0f0;
     padding: 10px;
     text-align: center;
-    border-top: 1px solid #f0f0f0;
 }
 
 footer a {
@@ -169,8 +114,10 @@ footer a:hover {
 #calendar {
     max-width: 900px;
     margin: 50px auto;
-    font-size: 12px;
-    min-height: 390px;
+}
+
+.calendar-divider {
+    margin-top: 2rem;
 }
 
 .search-container {
@@ -179,7 +126,7 @@ footer a:hover {
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
     width: fit-content;
-    margin-left: auto;
+    margin: 0 auto;
     color-scheme: dark;
 }
 
@@ -207,48 +154,11 @@ button {
     padding: 10px;
     border: none;
     border-radius: 5px;
-    background-color: #2f337d;
+    background-color: #6200ea;
     color: #ffffff;
     cursor: pointer;
 }
 
 button:hover {
-    background-color: #00ffc9;
-    color: #333;
+    background-color: #3700b3;
 }
-
-.btn {
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    background-color: #2f337d;
-    color: #ffffff;
-    cursor: pointer;
-    display: inline-block;
-    text-decoration: none;
-    margin: 6px 3px;
-    font-size: 14px;
-}
-
-.btn:hover {
-    background-color: #00ffc9;
-    color: #333;
-}
-
-/* Responzivita pro mobilní zařízení */
-@media all and (max-width: 768px) {
-    .flex-container,
-    form {
-      flex-direction: column;
-    }
-  
-    main,
-    aside {
-      flex: 1;
-      margin-bottom: 20px;
-    }
-
-    .search-container {
-        margin: 0 auto;
-    }
-  }
