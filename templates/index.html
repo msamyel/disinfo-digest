@@ -72,7 +72,9 @@
             <p class="article__meta">
                 <i class="fas fa-calendar"></i> <span class="date-to-format" data-date="{{ article.published_at_cet }}" data-format="dddd LL"></span>
                 <i class="fa-solid fa-link"></i></i> <span class="article__domain">{{ article.domain }}</span>
-                <i class="fas fa-tags"></i> <span class="article__category">dezinformace</span>{{ article.category }}
+                {% if article.hashtags %}
+                <i class="fas fa-tags"></i> <a class="article__category" href="/tags/{{article.hashtags}}">{{ article.hashtags }}</a>
+                {% endif %}
             </p>
             <p class="article__content">{{ article.content|safe }}
             <span class="article__content article__content__read_more"><a target="_blank" href="{{ article.url }}">Číst&nbsp;dále <i class="fa-solid fa-angle-right"></i></a></span>
