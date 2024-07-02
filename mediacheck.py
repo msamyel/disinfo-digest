@@ -17,9 +17,6 @@ NUM_THREADS = 5
 results = []
 load_dotenv()
 
-# Klíčová slova pro filtrování - celá slova místo kmenů
-
-
 # Funkce pro kontrolu, zda článek obsahuje daná klíčová slova
 def contains_keywords(text):
     text = text.lower()
