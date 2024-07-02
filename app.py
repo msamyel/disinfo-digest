@@ -118,7 +118,8 @@ def save_articles():
     rss_content = request.get_json()
     for article in rss_content:
         parsed_uri = urlparse(article['link'])
-        domain = '{uri.netloc}'.format(uri=parsed_uri)
+        domain = article['source']
+        hashtags = article['keyword']
 
         date = dateutil.parser.parse(article['published'])
         date_cet = date.astimezone(pytz.timezone("CET"))
@@ -133,6 +134,7 @@ def save_articles():
         new_article = Article(
             title=article['title'],
             domain=domain,
+            hashtags=hashtags,
             url=article['link'],
             content=article['content'],
             published_at_cet=date_cet_timezoneless,
