@@ -11,86 +11,14 @@ import json
 import os
 from urllib.parse import urlparse
 from dotenv import load_dotenv
+from keywords import KEYWORDS_SEARCH_TABLE as KEYWORDS
 
 NUM_THREADS = 5
 results = []
 load_dotenv()
 
 # Klíčová slova pro filtrování - celá slova místo kmenů
-KEYWORDS = {
-    'dezinform': 'dezinformace',
-    'misinform': 'misinformace',
-    'malinforma': 'malinformace',
-    'hoax': 'hoax',
-    'propagand': 'propaganda',
-    'podvod': 'podvod',
-    'twitter': 'x.com',
-    'facebook': 'facebook',
-    'umělá inteligence': 'AI',
-    'musk': 'Elon Musk',
-    'tik tok': 'tik tok',
-    'konspir': 'konspirace',
-    'deepfake': 'deepfake',
-    'botnet': 'botnet',
-    'ddos': 'ddos',
-    'troll': 'troll',
-    'sociální inženýrství': 'sociální inženýrství',
-    'clickbait': 'clickbait',
-    'kyber': 'kyberbezpečnost',
-    'sociální sítě': 'sociální sítě',
-    'mediální gramotnost': 'mediální gramotnost',
-    'řetězový email': 'řetězáky',
-    'řetězové email': 'řetězáky',
-    'řetězák': 'řetězáky',
-    'svoboda slova': 'svoboda slova',
-    'fact-checking': 'fact-checking',
-    'cenzúr': 'cenzura',
-    'cenzur': 'cenzura',
-    'algoritm': 'algoritmus',
-    'overovanie faktov': 'fact-checking',
-    'ověřování faktů': 'fact-checking',
-    'AI': 'AI',
-    'spamouflage': 'spamouflage',
-    'spam': 'spam',
-    'dragonbridge': 'dragonbridge',
-    'storm 1376': 'storm 1376',
-    'prebunking': 'prebunking',
-    'debunking': 'debunking',
-    'fake news': 'fake news',
-    'qanon': 'qanon',
-    'infowars': 'infoWars',
-    'doxx': 'doxx',
-    'doxing': 'doxing',
-    'gaslighting': 'gaslighting',
-    'postfakt': 'doba postfaktická',
-    'brigading': 'brigading',
-    'phishing': 'phishing',
-    'scam': 'scam',
-    'smishing': 'smishing',
-    'gerrymandering': 'gerrymandering',
-    'vishing': 'vishing',
-    'manosféra': 'manosféra',
-    'redpilling': 'redpilling',
-    'krajní pravice': 'krajní pravice',
-    'false flag': 'false flag',
-    'hybridní hrozb': 'hybridní hrozba',
-    'hijacking': 'hijacking',
-    'informační válk': 'informační válka',
-    'konfirmačn': 'konfirmační bias',
-    'kritické myšlení': 'kritické myšlení',
-    'mystifika': 'mystifikace',
-    'narativ': 'narativ',
-    'newspeak': 'newspeak',
-    'hack': 'hacking',
-    'phreak': 'phreak',
-    'radikali': 'radikalismus',
-    'pseudověd': 'pseudověda',
-    'overton': 'overtonovo okno',
-    'sextortion': 'sextortion',
-    'strategická komunik': 'strategická komunikace',
-    'stratcom': 'strategická komunikace',
-    'weaponiz': 'weaponizace'
-}
+
 
 # Funkce pro kontrolu, zda článek obsahuje daná klíčová slova
 def contains_keywords(text):
