@@ -9,6 +9,7 @@ import datetime
 import pytz
 from flask_moment import Moment
 from flask_caching import Cache
+from social import create_bsky_connection, create_bsky_post
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -115,6 +116,7 @@ def save_articles():
     if auth != app.config['API_SECRET']:
         return "ERROR: Unauthorized", 401
 
+    bsky_connection = create_bsky_connection()
     rss_content = request.get_json()
     for article in rss_content:
         parsed_uri = urlparse(article['link'])
@@ -143,6 +145,7 @@ def save_articles():
             is_hidden=False
         )
         db.session.add(new_article)
+        create_bsky_post(bsky_connection, article['title'], article['link'])
     db.session.commit()
     return "Articles saved!", 200
 

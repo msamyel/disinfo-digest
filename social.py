@@ -6,6 +6,8 @@ load_dotenv()
 
 
 def create_bsky_connection():
+    if not os.getenv("BLUESKY_ENABLED", False):
+        return None
     BLUESKY_HANDLE = os.getenv("BLUESKY_HANDLE")
     BLUESKY_APP_PASSWORD = os.getenv("BLUESKY_APP_PASSWORD")
 
@@ -35,6 +37,10 @@ def parse_url(text: str):
 
 
 def create_bsky_post(session, article_title, article_url):
+    if session is None:
+        return
+    print("Posting to bluesky..")
+
     now = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
 
     url_len = len(article_url)
@@ -69,7 +75,7 @@ def create_bsky_post(session, article_title, article_url):
         ]
     }
 
-    resp = requests.post(
+    requests.post(
         "https://bsky.social/xrpc/com.atproto.repo.createRecord",
         headers={"Authorization": "Bearer " + session["accessJwt"]},
         json={
@@ -78,4 +84,3 @@ def create_bsky_post(session, article_title, article_url):
             "record": post,
         },
     )
-    resp.raise_for_status()
