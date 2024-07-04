@@ -59,6 +59,7 @@ def create_bsky_post(session, article_title, article_url):
         "$type": "app.bsky.feed.post",
         "text": article_title + " " + article_url,
         "createdAt": now,
+        "langs": ["cs", "sk"],
         "facets": [
             {
                 "index": {
