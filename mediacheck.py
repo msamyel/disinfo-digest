@@ -33,7 +33,7 @@ def fetch_and_filter_rss(feed_url, start_date, end_date):
         article_date = dateparse(entry.published).replace(tzinfo=pytz.UTC)
         if start_date <= article_date <= end_date:
             summary_text = get_summary_text(entry)
-            content = entry.title + " " + summary_text
+            content = summary_text
             articles.append({
                 'title': entry.title,
                 'link': entry.link,
