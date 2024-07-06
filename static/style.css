@@ -197,14 +197,13 @@ footer a:hover {
 }
 
 #calendar {
-    max-width: 900px;
     margin: 50px auto;
     font-size: 12px;
-    min-height: 390px;
+    width: auto;
 }
 
-.fc .fc-scroller-harness-liquid {
-    overflow: hidden !important;
+.fc-scroller {
+   overflow-y: hidden !important;
 }
 
 .fc-direction-ltr .fc-button-group > .fc-button:not(:first-child),
@@ -216,6 +215,14 @@ footer a:hover {
 
 .fc .fc-button-primary:focus {
     box-shadow: none;
+}
+
+.fc-col-header,
+#calendar table,
+#calendar tbody,
+#calendar tr,
+.fc .fc-daygrid-body {
+    width: 100% !important;
 }
 
 .fc .fc-col-header-cell-cushion{
@@ -257,7 +264,7 @@ form {
     width: fit-content;
 }
 
-input[type="text"], input[type="date"] {
+input, input[type="text"], input[type="date"] {
     padding: 10px;
     border: none;
     border-radius: 5px;
