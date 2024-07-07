@@ -189,7 +189,7 @@ def sitemap():
 <priority>0.30</priority>
 </url>
 """
-    article_weeks = Article.exclude_hidden().group_by(Article.year, Article.week).all()
+    article_weeks = get_articles_grouped_by_week()
     for week in article_weeks:
         start_day, end_day = get_start_and_end_date_from_calendar_week(week.year, week.week)
 
@@ -206,6 +206,16 @@ def sitemap():
     xml += "</urlset>"
     return Response(xml, mimetype='text/xml')
 
+
+def get_articles_grouped_by_week():
+    return (
+        db.session.query(
+            Article.year,
+            Article.week,
+        )
+        .group_by(Article.year, Article.week)
+        .all()
+    )
 
 @app.cli.command('init-db')
 def init_db():
