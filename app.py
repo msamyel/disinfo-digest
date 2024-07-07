@@ -219,6 +219,5 @@ def get_articles_grouped_by_week():
 
 @app.cli.command('init-db')
 def init_db():
-    db.drop_all()
     db.create_all()
     print("Database initialized!")
