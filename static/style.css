@@ -7,8 +7,18 @@ body {
 
 header {
     color: #f0f0f0;
-    padding: 10px;
+    padding: 10px 0;
     text-align: center;
+}
+
+.header-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 1450px;
+    margin: 0 auto;
+    gap: 20px;
+    padding: 0 20px;
 }
 
 header ul {
@@ -38,6 +48,7 @@ header ul {
     max-width: 1450px;
     margin: 0 auto;
     gap: 20px;
+    padding: 0 20px;
 }
 
 main {
@@ -86,7 +97,7 @@ article {
 
 .article__title {
     color: #f0f0f0;
-    font-size: 1.5em;
+    font-size: 1.6rem;
     margin: 0.5rem 0 0.5rem 0;
 }
 
@@ -118,7 +129,8 @@ article {
 
 .article__content {
     color: #f0f0f0;
-    line-height: 1.3em;
+    font-size: 1.15rem;
+    line-height: 120%;
 }
 
 .article__content__read_more a {
@@ -155,6 +167,12 @@ article {
 
 .article__meta i.fas {
     color: #04F3F3;
+    padding-right: 2px;
+}
+
+span.article__domain {
+    display: inline-block;
+    padding-left: 10px;
 }
 
 aside {
@@ -165,6 +183,7 @@ footer {
     color: #f0f0f0;
     text-align: center;
     font-size: 14px;
+    padding: 0 20px;
 }
 
 .footer-inner {
@@ -197,9 +216,10 @@ footer a:hover {
 }
 
 #calendar {
-    margin: 50px auto;
-    font-size: 12px;
+    margin: 20px auto;
+    font-size: 0.9rem;
     width: auto;
+    min-height: 390px;
 }
 
 .fc-scroller {
@@ -249,11 +269,9 @@ footer a:hover {
 }
 
 .search-container {
-    padding: 20px;
     border-radius: 10px;
     width: fit-content;
     margin-left: auto;
-    color-scheme: dark;
 }
 
 form {
@@ -314,17 +332,26 @@ button:hover {
 }
 
 /* Responzivita pro mobilní zařízení */
-@media all and (max-width: 768px) {
+@media all and (max-width: 992px) {
     .flex-container {
       flex-direction: column;
       gap: 0;
       margin: 0;
-      padding: 0 20px;
     }
 
     .flex-container,
+    .footer-inner,
+    .header-container,
     form {
       flex-direction: column;
+    }
+
+    .footer-inner {
+      display: block;
+    }
+
+    .footer-inner .social-media {
+      text-align: left;
     }
 
     main,
@@ -336,4 +363,26 @@ button:hover {
     .search-container {
         margin: 0 auto;
     }
+
+    span.article__domain {
+      display: block;
+      padding-top: 5px;
+      padding-left: 0;
+    }
+}
+
+@media all and (max-width: 1200px) {
+
+  form {
+    flex-direction: column;
+    display: flex;
+  }
+
+  form input[type="text"] {
+    flex: 1;
+  }
+  form input[type="date"] {
+    flex: 1;
+    direction: row;
+  }
 }

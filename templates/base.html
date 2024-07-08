@@ -20,7 +20,7 @@
 </head>
 <body>
 <header>
-    <div class="flex-container">
+    <div class="header-container">
     <h1><a href="/"><i class="fa-solid fa-newspaper"></i> KyberZprávy.cz</a></h1>
     <ul>
         <li><a href="/" class="header__link">Domů</a></li>
@@ -30,8 +30,10 @@
     <div class="search-container">
         <form action="/" method="get">
             <input type="text" placeholder="Hledat..." name="search_query" value="{{search_query if search_query }}">
-            <input type="date" name="search_from" value="{{search_from}}">
-            <input type="date" name="search_until" value="{{search_until}}">
+            <div class="search-date-inner">
+              <input type="date" name="search_from" value="{{search_from}}">
+              <input type="date" name="search_until" value="{{search_until}}">
+            </div>
             <button type="submit">Hledat</button>
         </form>
     </div>
@@ -40,7 +42,7 @@
     {% block content %}{% endblock %}
 <footer>
     <div class="footer-inner">
-      <p class="copyright">O chod webu se starají <a href="https://jvetvicka.github.io/">Jiří Větvička</a> a <a href="https://matejvi.cz/">Matěj Voslař</a>.</p>
+      <p class="copyright">O chod webu se starají <a href="https://jvetvicka.github.io/">Jiří Větvička</a>, <a href="https://matejvi.cz/">Matěj Voslař</a> a <a href="https://bsky.app/profile/kniznikocka.bsky.social">Knižní Kočka</a></p>
       <p class="social-media"><a href="https://bsky.app/profile/kyberzpravy.cz" target="_blank"><i class="fa-brands fa-bluesky"></i></a></p>
     </div>
 </footer>

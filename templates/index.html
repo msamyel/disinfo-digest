@@ -71,7 +71,7 @@
 
             <p class="article__meta">
                 <i class="fas fa-calendar"></i> <span class="date-to-format" data-date="{{ article.published_at_cet }}" data-format="dddd LL"></span>
-                <i class="fas fa-link"></i></i> <span class="article__domain">{{ article.domain }}</span>
+                <span class="article__domain"><i class="fas fa-link"></i> {{ article.domain }}</span>
                 <!--<i class="fas fa-tags"></i> <span class="article__category">{{ article.hashtags }}</span>-->
             </p>
             <p class="article__content">{{ article.content|safe }}
