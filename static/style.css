@@ -43,6 +43,11 @@ header ul {
     color: #00ffc9;
 }
 
+header img.logo {
+    height: 30px;
+    margin-right: -5px;
+}
+
 .flex-container {
     display: flex;
     max-width: 1450px;
