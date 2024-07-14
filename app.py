@@ -55,10 +55,11 @@ def get_newest_articles():
 def get_filtered_articles(search_query, start_at, end_at):
     articles = Article.exclude_hidden().order_by(Article.published_at_cet_str.desc(), Article.id.desc())
     if search_query:
+        search_query_lower_unaccented = sa.func.unaccent(search_query.lower())
         articles = articles.filter(
             sa.or_(
-                Article.content.contains(search_query),
-                Article.title.contains(search_query)
+                sa.func.unaccent(sa.func.lower(Article.content)).contains(search_query_lower_unaccented),
+                sa.func.unaccent(sa.func.lower(Article.title)).contains(search_query_lower_unaccented)
             )
         )
     if start_at:

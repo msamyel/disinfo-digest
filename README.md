@@ -24,3 +24,10 @@ flask run
 ```commandline
 python mediacheck.py
 ```
+
+
+## Other Notes
+Searching the database is case-insensitive and diacritic-insensitive. To enable this feature, you need to install the unaccent extension in your database:
+```
+CREATE EXTENSION unaccent;
+```
