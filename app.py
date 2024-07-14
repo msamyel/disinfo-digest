@@ -117,7 +117,11 @@ def save_articles():
     if auth != app.config['API_SECRET']:
         return "ERROR: Unauthorized", 401
 
-    bsky_connection = create_bsky_connection()
+    if app.config['BLUESKY_ENABLED']:
+        bsky_connection = create_bsky_connection(app.config['BLUESKY_HANDLE'], app.config['BLUESKY_APP_PASSWORD'])
+    else:
+        bsky_connection = None
+
     rss_content = request.get_json()
     for article in rss_content:
         parsed_uri = urlparse(article['link'])

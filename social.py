@@ -2,20 +2,13 @@ from dotenv import load_dotenv
 from datetime import datetime, timezone
 import requests, os, json, re
 
-load_dotenv()
 
-
-def create_bsky_connection():
-    if not os.getenv("BLUESKY_ENABLED", False):
-        return None
-    BLUESKY_HANDLE = os.getenv("BLUESKY_HANDLE")
-    BLUESKY_APP_PASSWORD = os.getenv("BLUESKY_APP_PASSWORD")
-
-    print(f"Logging in as {BLUESKY_HANDLE}...")
+def create_bsky_connection(handle, app_password):
+    print(f"Logging in as {handle}...")
 
     resp = requests.post(
         "https://bsky.social/xrpc/com.atproto.server.createSession",
-        json={"identifier": BLUESKY_HANDLE, "password": BLUESKY_APP_PASSWORD},
+        json={"identifier": handle, "password": app_password},
     )
     resp.raise_for_status()
     session = resp.json()
