@@ -1,101 +1,179 @@
 # Dictionary pro vyhledávání slov v textu a jejich převod na kategorie.
 KEYWORDS_SEARCH_TABLE = {
-    #dezinformace
+    # dezinformace
     'dezinform': 'dezinformace',
-    'misinform': 'misinformace',
-    'malinforma': 'malinformace',
-    'hoax': 'hoax',
-    'konspir': 'konspirace',
-    'manipulace': 'manipulace',
-    'fake news': 'fake news',
-    'postfakt': 'doba postfaktická',
-    'pseudověd': 'pseudověda',
+    'misinform': 'dezinformace',
+    'malinforma': 'dezinformace',
+    'hoax': 'dezinformace',
+    'konspir': 'dezinformace',
+    'fake news': 'dezinformace',
+    'postfakt': 'dezinformace',
+    'pseudověd': 'dezinformace',
+    'pseudoved': 'dezinformace',
+    'chemtrails': 'dezinformace',
 
-    #strategická komunikace
-    'strategická komunik': 'strategická komunikace',
-    'stratcom': 'strategická komunikace',
-
-    #propaganda
+    # propaganda
     'propagand': 'propaganda',
-    'sociální inženýrství': 'sociální inženýrství',
-    'dragonbridge': 'dragonbridge',
-    'storm 1376': 'storm 1376',
-    'qanon': 'qanon',
-    'infowars': 'infoWars',
-    'false flag': 'false flag',
-    'hybridní hrozb': 'hybridní hrozba',
-    'informační válk': 'informační válka',
-    'narativ': 'narativ',
-    'mystifika': 'mystifikace',
+    'spamouflage': 'propaganda',
+    'dragonbridge': 'propaganda',
+    'storm 1376': 'propaganda',
+    'false flag': 'propaganda',
+    'falešnou vlajk': 'propaganda',
+    'falešná vlajk': 'propaganda',
 
-    #sociální sítě
-    'twitter': 'x.com',
-    'facebook': 'facebook',
-    'musk': 'Elon Musk',
-    'tik tok': 'tik tok',
-    'sociální sítě': 'sociální sítě',
-    'algoritm': 'algoritmus',
-    'gaslighting': 'gaslighting',
+    # sociální sítě - možná bych vypustil
+    # 'twitter': 'sociální sítě',
+    # 'Meta': 'sociální sítě',
+    # 'musk': 'Elon Musk',
+    # 'tik tok': 'sociální sítě',
+    # 'sociální sítě': 'sociální sítě',
+    'algoritm': 'sociální sítě',
+    'nenávistný komentář': 'nenávistné komentáře',
+    'nenávistných komentář': 'nenávistné komentáře',
+    'nenávistnými komentář': 'nenávistné komentáře',
+    'nenávistné komentář': 'nenávistné komentáře',
 
-    #AI
-    'umělá inteligence': 'AI',
-    'deepfake': 'deepfake',
-    'AI': 'AI',
+    # Jména dezinformátorů - https://www.seznamzpravy.cz/clanek/domaci-kauzy-kdo-v-cesku-vydelava-na-strachu-lidi-232386
+    'Tomáš Čermák': 'dezinformátoři',
+    'Lubomír Volný': 'dezinformátoři',
+    'Patrik Tušl': 'dezinformátoři',
+    'Jan Macháček': 'dezinformátoři',
+    'Petr Bílý': 'dezinformátoři',
+    'Jakub Netík': 'dezinformátoři',
+    'Pavel Zítko': 'dezinformátoři',
+    'Ladislav Vrabel': 'dezinformátoři',
+    'Vladimír Kapal': 'dezinformátoři',
+    'Jana Peterková': 'dezinformátoři',
+    'Jindřich Rajchl': 'dezinformátoři',
+    'Žarko Jovanovič': 'dezinformátoři',
+    'Ivan Smetana': 'dezinformátoři',
+    'Petr Hájek': 'dezinformátoři',
+    'Marek Pešl': 'dezinformátoři',
+    'Ondřej Geršl': 'dezinformátoři',
+    'Ondřej Thor': 'dezinformátoři',
+    'Raptor-TV': 'dezinformátoři',
+    'Aeronet': 'dezinformátoři',
+    'Aliance pro rodinu': 'dezinformátoři',
 
-    #Podvodné praktiky
+    # AI
+    'umělá intelig': 'umělá inteligence',
+    'umělé intelig': 'umělá inteligence',
+    'umělou intelig': 'umělá inteligence',
+    'deepfake': 'umělá inteligence',
+    'AI': 'umělá inteligence',
+
+    # Kyberbezpečnost
+    'phishing': 'kyberbezpečnost',
+    'kyber': 'kyberbezpečnost',
+    'botnet': 'kyberbezpečnost',
+    'ddos': 'kyberbezpečnost',
+    'scam': 'kyberbezpečnost',
+    'smishing': 'kyberbezpečnost',
+    'vishing': 'kyberbezpečnost',
+    'hack': 'kyberbezpečnost',
+    'phreak': 'kyberbezpečnost',
+    'ransomware': 'kyberbezpečnost',
+    'sociální inženýr': 'kyberbezpečnost',
+    'únik dat': 'kyberbezpečnost',
+    'zero-day': 'kyberbezpečnost',
+    'zero day': 'kyberbezpečnost',
+    'krádež identity': 'kyberbezpečnost',
+    'malware': 'kyberbezpečnost',
+    'hijacking': 'kyberbezpečnost',
+    
+    # Podvodné praktiky
     'podvod': 'podvod',
     'clickbait': 'clickbait',
-    'botnet': 'botnet',
-    'ddos': 'ddos',
-    'troll': 'troll',
-    'kyber': 'kyberbezpečnost',
-    'spamouflage': 'spamouflage',
-    'spam': 'spam',
-    'doxx': 'doxxing',
-    'doxing': 'doxxing',
-    'brigading': 'brigading',
-    'phishing': 'phishing',
-    'scam': 'scam',
-    'smishing': 'smishing',
-    'vishing': 'vishing',
-    'hack': 'hacking',
-    'phreak': 'phreaking',
-    'sextortion': 'sextortion',
-    'gerrymandering': 'gerrymandering',
-    'hijacking': 'hijacking',
+    'spam': 'podvod',
+    'sociální inženýrství': 'podvod',
 
-    #Mediální gramotnost
+    # Kyberšikana
+    'kyberšikan': 'kyberšikana',
+    'doxx': 'kyberšikana',
+    'doxing': 'kyberšikana',
+    'brigading': 'kyberšikana',
+    'stalkgin': 'kyberšikana',
+    'sextortion': 'kyberšikana',
+    'troll': 'kyberšikana',
+    'gaslighting': 'kyberšikana',
+
+    # Mediální gramotnost
     'mediální gramotnost': 'mediální gramotnost',
 
-    #Řetězové zprávy
+    # Řetězové zprávy
     'řetězový email': 'řetězáky',
     'řetězové email': 'řetězáky',
     'řetězák': 'řetězáky',
 
-    #Svoboda slova
+    # Svoboda slova
     'svoboda slova': 'svoboda slova',
-    'cenzúr': 'cenzura',
-    'cenzur': 'cenzura',
-    'newspeak': 'newspeak',
+    'cenzúr': 'svoboda slova',
+    'cenzur': 'svoboda slova',
+    'newspeak': 'svoboda slova',
 
-    #Fact-checking
+    # Fact-checking
     'fact-checking': 'fact-checking',
     'overovanie faktov': 'fact-checking',
     'ověřování faktů': 'fact-checking',
-    'prebunking': 'prebunking',
-    'debunking': 'debunking',
+    'prebunking': 'fact-checking',
+    'debunking': 'fact-checking',
 
-    #Radikalizace
-    'manosféra': 'manosféra',
-    'redpilling': 'redpilling',
-    'radikali': 'radikalismus',
-    'krajní pravice': 'krajní pravice',
-    'overton': 'overtonovo okno',
-    'weaponiz': 'weaponizace',
+    # Krajní pravice/levice
+    'krajní pravic': 'krajní pravice',
+    'krajně pravic': 'krajní pravice',
+    'extrémní pravic': 'krajní pravice',
+    'extrémně pravic': 'krajní pravice',
+    'krajně levic': 'krajní levice',
+    'krajní levic': 'krajní levice',
+    'extrémní levic': 'krajní levice',
+    'extrémně levic': 'krajní levice',
 
-    #Kritické myšlení
+    # Radikalizace
+    'redpilling': 'radikalizace',
+    'radikali': 'radikalizace',
+    'weaponiz': 'radikalizace',
+    'MAGA': 'radikalizace', #new
+    'qanon': 'radikalizace',
+    'infowars': 'radikalizace',
+    'trumpismus': 'radikalizace', #new
+    'extremis': 'radikalizace', #new
+    'antisemi': 'radikalizace', #new
+    'radikál': 'radikalizace', #new
+
+    # Muži - seximus?
+    'manosféra': 'sexismus',
+    'mansplaining': 'sexismus',
+    'machis': 'sexismus',
+    'misogyn': 'sexismus',
+    'mizogyn': 'sexismus',
+    'šovin': 'sexismus',
+
+    # Terorismus
+    'teroris': 'terorismus', #new
+
+    # Kritické myšlení
     'konfirmačn': 'konfirmační bias',
     'kritické myšlení': 'kritické myšlení',
+
+    # Hybridní hrozby
+    'hybridní hrozb': 'hybridní hrozby',
+    'hybridní kampaň': 'hybridní hrozby',
+    'informační válk': 'hybridní hrozby',
+    'informační operac': 'hybridní hrozby',
+
+    # strategická komunikace
+    'strategická komunik': 'strategická komunikace',
+    'stratcom': 'strategická komunikace',
+
+    # Ostatní
+    'manipulace': 'manipulace',
+    'narativ': 'narativ',
+    'mystifika': 'mystifikace',
+
+    # Out - nikdo nehleda
+    # 'gerrymandering': 'gerrymandering',
+    # 'overton': 'overtonovo okno',
+    # 'himpatie': 'himpathy',
 }
 
 # Dictionary pro převod kategorií na verzi bez diakritiky a obráceně.
