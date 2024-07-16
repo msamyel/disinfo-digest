@@ -10,6 +10,7 @@ import pytz
 from flask_moment import Moment
 from flask_caching import Cache
 from social import create_bsky_connection, create_bsky_post
+from keywords import TAGS_ACCENT_TABLE, get_accented_tag
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -40,7 +41,8 @@ def index():
         is_search=is_search,
         search_query=search_query,
         search_from=search_from,
-        search_until=search_until)
+        search_until=search_until,
+        tags_accent_table=TAGS_ACCENT_TABLE)
 
 
 def get_newest_articles():
@@ -90,7 +92,8 @@ def index_filtered_by_date(year, month, day):
         year=year,
         week=week_number,
         start_day=start_day,
-        end_day=end_day
+        end_day=end_day,
+        tags_accent_table=TAGS_ACCENT_TABLE
     )
 
 
@@ -98,6 +101,22 @@ def get_start_and_end_date_from_calendar_week(year, calendar_week):
     monday = datetime.datetime.strptime(f'{year}-{calendar_week}-1', "%Y-%W-%w").date()
     return monday, monday + datetime.timedelta(days=6.9)
 
+
+@app.route("/tags/<tag>")
+def index_filtered_by_tag(tag):
+    accented_tag = get_accented_tag(tag)
+    articles = (Article.exclude_hidden()
+                .filter(Article.hashtags.contains(accented_tag))
+                .order_by(Article.published_at_cet.desc(), Article.id.desc())
+                .all())
+    return render_template(
+        'index.html',
+        articles=articles,
+        article_counts=get_article_counts(),
+        is_search=True,
+        tag_filter=tag,
+        tags_accent_table=TAGS_ACCENT_TABLE
+    )
 
 @cache.cached(timeout=7200, key_prefix='article_counts')
 def get_article_counts():
