@@ -12,7 +12,7 @@ pip install -r requirements.txt
 
 3. init db
 ```commandline
-flask init_dby
+flask init_db
 ```
 
 4. run app
