@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, Response
 from flask_sqlalchemy import SQLAlchemy
 import sqlalchemy as sa
 from config import Config
@@ -9,6 +9,7 @@ import datetime
 import pytz
 from flask_moment import Moment
 from flask_caching import Cache
+from social import create_bsky_connection, create_bsky_post
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -54,10 +55,11 @@ def get_newest_articles():
 def get_filtered_articles(search_query, start_at, end_at):
     articles = Article.exclude_hidden().order_by(Article.published_at_cet_str.desc(), Article.id.desc())
     if search_query:
+        search_query_lower_unaccented = sa.func.unaccent(search_query.lower())
         articles = articles.filter(
             sa.or_(
-                Article.content.contains(search_query),
-                Article.title.contains(search_query)
+                sa.func.unaccent(sa.func.lower(Article.content)).contains(search_query_lower_unaccented),
+                sa.func.unaccent(sa.func.lower(Article.title)).contains(search_query_lower_unaccented)
             )
         )
     if start_at:
@@ -115,6 +117,11 @@ def save_articles():
     if auth != app.config['API_SECRET']:
         return "ERROR: Unauthorized", 401
 
+    if app.config['BLUESKY_ENABLED']:
+        bsky_connection = create_bsky_connection(app.config['BLUESKY_HANDLE'], app.config['BLUESKY_APP_PASSWORD'])
+    else:
+        bsky_connection = None
+
     rss_content = request.get_json()
     for article in rss_content:
         parsed_uri = urlparse(article['link'])
@@ -145,6 +152,7 @@ def save_articles():
             is_hidden=False
         )
         db.session.add(new_article)
+        create_bsky_post(bsky_connection, article['title'], article['link'])
     db.session.commit()
     return "Articles saved!", 200
 
@@ -171,8 +179,52 @@ def changelog():
     return render_template('changelog.html', title='Changelog')
 
 
+@app.route("/sitemap")
+def sitemap():
+    host = app.config["APP_HOST"]
+    now = datetime.datetime.now().replace(tzinfo=pytz.utc)
+
+    xml = f"""<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+<url>
+<loc>{host}</loc>
+<lastmod>{now.isoformat()}</lastmod>
+<priority>1.00</priority>
+</url>
+<url>
+<loc>{host}/changelog</loc>
+<lastmod>2024-07-07T16:00:00+00:00</lastmod>
+<priority>0.30</priority>
+</url>
+"""
+    article_weeks = get_articles_grouped_by_week()
+    for week in article_weeks:
+        start_day, end_day = get_start_and_end_date_from_calendar_week(week.year, week.week)
+
+        end_day = datetime.datetime(end_day.year, end_day.month, end_day.day).replace(tzinfo=pytz.utc)
+        if end_day > now:
+            end_day = now
+        xml += f"""
+<url>
+<loc>{host}/date/{start_day}</loc>
+<lastmod>{end_day.isoformat()}</lastmod>
+<priority>0.7</priority>
+</url>
+"""
+    xml += "</urlset>"
+    return Response(xml, mimetype='text/xml')
+
+
+def get_articles_grouped_by_week():
+    return (
+        db.session.query(
+            Article.year,
+            Article.week,
+        )
+        .group_by(Article.year, Article.week)
+        .all()
+    )
+
 @app.cli.command('init-db')
 def init_db():
-    db.drop_all()
     db.create_all()
     print("Database initialized!")

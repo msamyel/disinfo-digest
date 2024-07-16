@@ -7,17 +7,21 @@
     <title>KyberZprávy</title>
     {% endif %}
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <!-- <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='kz_favico_tp.png') }}">
 </head>
 <body>
 <header>
-    <div class="flex-container">
-    <h1><a href="/">KyberZprávy.cz</a></h1>
+    <div class="header-container">
+    <h1><a href="/"><img src="/static/kyberzpravy-logo.png" alt="" class="logo">yberZprávy.cz</a></h1>
     <ul>
         <li><a href="/" class="header__link">Domů</a></li>
         <li><a href="/changelog" class="header__link">Changelog</a></li>
@@ -26,8 +30,10 @@
     <div class="search-container">
         <form action="/" method="get">
             <input type="text" placeholder="Hledat..." name="search_query" value="{{search_query if search_query }}">
-            <input type="date" name="search_from" value="{{search_from}}">
-            <input type="date" name="search_until" value="{{search_until}}">
+            <div class="search-date-inner">
+              <input type="date" name="search_from" value="{{search_from}}">
+              <input type="date" name="search_until" value="{{search_until}}">
+            </div>
             <button type="submit">Hledat</button>
         </form>
     </div>
@@ -35,8 +41,10 @@
 </header>
     {% block content %}{% endblock %}
 <footer>
-    <p>O chod webu se starají <a href="https://jvetvicka.github.io/">Jiří Větvička</a> a <a
-            href="https://matejvi.cz/">Matěj Voslař</a>.</p>
+    <div class="footer-inner">
+      <p class="copyright">O chod webu se starají <a href="https://jvetvicka.github.io/">Jiří Větvička</a>, <a href="https://matejvi.cz/">Matěj Voslař</a> a <a href="https://bsky.app/profile/kniznikocka.bsky.social">Knižní Kočka</a></p>
+      <p class="social-media"><a href="https://bsky.app/profile/kyberzpravy.cz" target="_blank"><i class="fa-brands fa-bluesky"></i></a></p>
+    </div>
 </footer>
 </body>
 </html>

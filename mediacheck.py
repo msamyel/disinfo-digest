@@ -53,7 +53,7 @@ def fetch_and_filter_rss(feed_url, start_date, end_date):
         article_date = dateparse(entry.published).replace(tzinfo=pytz.UTC)
         if start_date <= article_date <= end_date:
             summary_text = get_summary_text(entry)
-            content = entry.title + " " + summary_text
+            content = summary_text
             keyword_found = contains_keywords(content)  # Změna: Uložení nalezeného klíčového slova
             link = entry.link
             source = get_server_name(link)
@@ -62,9 +62,9 @@ def fetch_and_filter_rss(feed_url, start_date, end_date):
                     'title': entry.title,
                     'link': link,
                     'published': entry.published,
-                    'content': content,
+                    'content': summary_text,
                     'source': source,  # Přidání serveru do slovníku
-                    'keyword': keyword_found if keyword_found else 'N/A'  # Přidání klíčového slova do slovníku
+                    'keyword': keyword_found if keyword_found else ''  # Přidání klíčového slova do slovníku
                 })
     return articles
 

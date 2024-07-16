@@ -7,17 +7,27 @@ A web application created with Flask then displays these articles and allows for
 ```commandline
 pip install -r requirements.txt
 ```
-2. init db
+
+2. Rename `.env.sample` to `.env` and fill in the necessary data
+
+3. init db
 ```commandline
-flask init_db.py
+flask init_dby
 ```
 
-3. run app
+4. run app
 ```commandline 
 flask run
 ```
 
-4. set up your CRON/scheduler to automatically call the `mediacheck.py` script
+5. set up your CRON/scheduler to automatically call the `mediacheck.py` script
 ```commandline
 python mediacheck.py
+```
+
+
+## Other Notes
+Searching the database is case-insensitive and diacritic-insensitive. To enable this feature, you need to install the unaccent extension in your database:
+```
+CREATE EXTENSION unaccent;
 ```
