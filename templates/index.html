@@ -85,13 +85,9 @@
 </main>
 <aside>
     <!--
-    <a class="post-tag btn btn-outline-primary" href="/tags/facebook/">propaganda</a>
-    <a class="post-tag btn btn-outline-primary" href="/tags/gork/">dezinformace</a>
-    <a class="post-tag btn btn-outline-primary" href="/tags/in-progress/">cenzura</a>
-    <a class="post-tag btn btn-outline-primary" href="/tags/m%C3%A9dia/">média</a>
-    <a class="post-tag btn btn-outline-primary" href="/tags/nez%C3%A1visl%C3%A9-zpravodajstv%C3%AD/">nezávislé zpravodajství</a>
-    <a class="post-tag btn btn-outline-primary" href="/tags/telegram/">telegram</a>
-    <a class="post-tag btn btn-outline-primary" href="/tags/x/">Elon Musk</a>
+    {% for tag_accented, tag_unaccented in tags_accent_table.items() %}
+        <a class="post-tag btn btn-outline-primary" href="/tags/{{ tag_unaccented }}">{{ tag_accented }}</a>
+    {% endfor %}
     -->
     <div id='calendar'></div>
 </aside>
