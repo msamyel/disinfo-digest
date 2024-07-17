@@ -199,15 +199,20 @@ aside {
 }
 
 .post-cat {
-    letter-spacing: 0;
     text-transform: capitalize;
     font-weight: 500;
     font-size: 16px;
     display: flex;
     align-items: center;
-    border: none;
     background: transparent;
-    padding: 0 0;
+    padding: 1px 0;
+    position: relative;
+    border-bottom: 1px solid transparent;
+}
+
+.post-cat:hover {
+    border-bottom: 1px solid #04F3F3;
+    transition: all 0.3s ease-out 0s;
 }
 
 a.post-cat-text {
