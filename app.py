@@ -137,9 +137,9 @@ def get_article_counts():
 @cache.cached(timeout=7200, key_prefix='category_counts')
 def get_tag_counts_for_all_time():
     category_counts = (db.session
-                        .query(
-        Article.hashtags.label('tag'),
-        sa.func.count(Article.id).label('count'))
+                       .query(
+                            Article.hashtags.label('tag'),
+                            sa.func.count(Article.id).label('count'))
                        .filter(Article.is_hidden == False)
                        .group_by(Article.hashtags)
                        .all())
