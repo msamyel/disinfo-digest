@@ -42,7 +42,9 @@ def index():
         search_query=search_query,
         search_from=search_from,
         search_until=search_until,
-        tags_accent_table=TAGS_ACCENT_TABLE)
+        tags_accent_table=TAGS_ACCENT_TABLE,
+        tag_counts=get_tag_counts_for_all_time()
+    )
 
 
 def get_newest_articles():
@@ -93,7 +95,8 @@ def index_filtered_by_date(year, month, day):
         week=week_number,
         start_day=start_day,
         end_day=end_day,
-        tags_accent_table=TAGS_ACCENT_TABLE
+        tags_accent_table=TAGS_ACCENT_TABLE,
+        tag_counts=get_tag_counts_for_all_time()
     )
 
 
@@ -115,7 +118,8 @@ def index_filtered_by_tag(tag):
         article_counts=get_article_counts(),
         is_search=True,
         tag_filter=tag,
-        tags_accent_table=TAGS_ACCENT_TABLE
+        tags_accent_table=TAGS_ACCENT_TABLE,
+        tag_counts=get_tag_counts_for_all_time()
     )
 
 @cache.cached(timeout=7200, key_prefix='article_counts')
@@ -128,6 +132,19 @@ def get_article_counts():
                       .group_by(Article.published_at_cet_str)
                       .all())
     return article_counts
+
+
+@cache.cached(timeout=7200, key_prefix='category_counts')
+def get_tag_counts_for_all_time():
+    category_counts = (db.session
+                        .query(
+        Article.hashtags.label('tag'),
+        sa.func.count(Article.id).label('count'))
+                       .filter(Article.is_hidden == False)
+                       .group_by(Article.hashtags)
+                       .all())
+    return {tag: count for tag, count in category_counts}
+
 
 @app.route("/articles", methods=['POST'])
 def save_articles():

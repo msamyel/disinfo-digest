@@ -88,7 +88,7 @@
     <div class="aside-categories">
         <ul>
             {% for tag_accented, tag_unaccented in tags_accent_table.items() %}
-                <li class="post-cat"><a class="post-cat-text" href="/tags/{{ tag_unaccented }}">{{ tag_accented }}</a> <span class="post-cat-number">(1)</span></li>
+                <li class="post-cat"><a class="post-cat-text" href="/tags/{{ tag_unaccented }}">{{ tag_accented }}</a> <span class="post-cat-number">({{ tag_counts[tag_accented] or 0 }})</span></li>
             {% endfor %}
         </ul>
     </div>
