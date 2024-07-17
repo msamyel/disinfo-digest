@@ -83,6 +83,7 @@ KEYWORDS_SEARCH_TABLE = {
     'krádež identity': 'kyberbezpečnost',
     'malware': 'kyberbezpečnost',
     'hijacking': 'kyberbezpečnost',
+    'NÚKIB': 'kyberbezpečnost',
     
     # Podvodné praktiky
     'podvod': 'podvod',
