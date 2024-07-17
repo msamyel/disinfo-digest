@@ -11,6 +11,9 @@ KEYWORDS_SEARCH_TABLE = {
     'pseudověd': 'dezinformace',
     'pseudoved': 'dezinformace',
     'chemtrails': 'dezinformace',
+    'mystifika': 'dezinformace',
+    'manipulace': 'dezinformace',
+    'narativ': 'dezinformace',
 
     # propaganda
     'propagand': 'propaganda',
@@ -83,7 +86,6 @@ KEYWORDS_SEARCH_TABLE = {
     
     # Podvodné praktiky
     'podvod': 'podvod',
-    'clickbait': 'clickbait',
     'spam': 'podvod',
     'sociální inženýrství': 'podvod',
 
@@ -99,6 +101,10 @@ KEYWORDS_SEARCH_TABLE = {
 
     # Mediální gramotnost
     'mediální gramotnost': 'mediální gramotnost',
+    'clickbait': 'mediální gramotnost',
+    'konfirmačn': 'mediální gramotnost',
+    'kritické myšlení': 'mediální gramotnost',
+    'informační gramotnost': 'mediální gramotnost',
 
     # Řetězové zprávy
     'řetězový email': 'řetězáky',
@@ -151,10 +157,6 @@ KEYWORDS_SEARCH_TABLE = {
     # Terorismus
     'teroris': 'terorismus', #new
 
-    # Kritické myšlení
-    'konfirmačn': 'konfirmační bias',
-    'kritické myšlení': 'kritické myšlení',
-
     # Hybridní hrozby
     'hybridní hrozb': 'hybridní hrozby',
     'hybridní kampaň': 'hybridní hrozby',
@@ -164,11 +166,6 @@ KEYWORDS_SEARCH_TABLE = {
     # strategická komunikace
     'strategická komunik': 'strategická komunikace',
     'stratcom': 'strategická komunikace',
-
-    # Ostatní
-    'manipulace': 'manipulace',
-    'narativ': 'narativ',
-    'mystifika': 'mystifikace',
 
     # Out - nikdo nehleda
     # 'gerrymandering': 'gerrymandering',
@@ -186,7 +183,6 @@ TAGS_ACCENT_TABLE = {
     "umělá inteligence": "umela-inteligence",
     "kyberbezpečnost": "kyberbezpecnost",
     "podvod": "podvod",
-    "clickbait": "clickbait",
     "kyberšikana": "kybersikana",
     "mediální gramotnost": "medialni-gramotnost",
     "řetězáky": "retezaky",
@@ -197,12 +193,8 @@ TAGS_ACCENT_TABLE = {
     "radikalizace": "radikalizace",
     "sexismus": "sexismus",
     "terorismus": "terorismus",
-    "kritické myšlení": "kriticke-mysleni",
     "hybridní hrozby": "hybridni-hrozby",
     "strategická komunikace": "strategicka-komunikace",
-    "manipulace": "manipulace",
-    "narativ": "narativ",
-    "mystifikace": "mystifikace",
 }
 
 

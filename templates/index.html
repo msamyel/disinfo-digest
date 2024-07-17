@@ -71,9 +71,9 @@
 
             <p class="article__meta">
                 <i class="fas fa-calendar"></i> <span class="date-to-format" data-date="{{ article.published_at_cet }}" data-format="dddd LL"></span>
-                <i class="fa-solid fa-link"></i></i> <span class="article__domain">{{ article.domain }}</span>
+                <span class="article__domain"><i class="fas fa-link"></i></i> {{ article.domain }}</span>
                 {% if article.hashtags %}
-                <i class="fas fa-tags"></i> <a class="article__category" href="/tags/{{ tags_accent_table[article.hashtags] }}">{{ article.hashtags }}</a>
+                <span class="article__category"><i class="fas fa-tags"></i> <a class="article__category__link" href="/tags/{{ tags_accent_table[article.hashtags] }}">{{ article.hashtags }}</a>
                 {% endif %}
             </p>
             <p class="article__content">{{ article.content|safe }}
@@ -84,11 +84,14 @@
 {% endif %}
 </main>
 <aside>
-    <!--
-    {% for tag_accented, tag_unaccented in tags_accent_table.items() %}
-        <a class="post-tag btn btn-outline-primary" href="/tags/{{ tag_unaccented }}">{{ tag_accented }}</a>
-    {% endfor %}
-    -->
+    <h2>Kategorie</h2>
+    <div class="aside-categories">
+        <ul>
+            {% for tag_accented, tag_unaccented in tags_accent_table.items() %}
+                <li class="post-cat"><a class="post-cat-text" href="/tags/{{ tag_unaccented }}">{{ tag_accented }}</a> <span class="post-cat-number">(1)</span></li>
+            {% endfor %}
+        </ul>
+    </div>
     <div id='calendar'></div>
 </aside>
 </div>
