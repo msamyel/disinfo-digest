@@ -141,47 +141,55 @@ def scrape_feed_to_results(feed_url, start_date, end_date):
 if __name__ == "__main__":
     # Seznam RSS kanálů
     feeds = [
-        'https://hlidacipes.org/feed/',
-        'https://www.irozhlas.cz/rss/irozhlas/tag/7708693',
-        'https://denikn.cz/minuta/feed/',
+        # Weby s hodnocením A, A-, B+ z https://www.nfnz.cz/rating-medii/
+        'https://ct24.ceskatelevize.cz/rss/tema/hlavni-zpravy-84313', # A
+        'https://www.ceskenoviny.cz/sluzby/rss/cr.php', # A
+        'https://www.ceskenoviny.cz/sluzby/rss/svet.php', # A
+        'https://denikn.cz/minuta/feed/', # A
+        'https://denikn.cz/rss/', # A
+        'https://dennikn.sk/rss/', 
         'https://dennikn.sk/minuta/feed',
-        'https://dennikn.sk/rss/',
-        'https://denikn.cz/rss/',
-        'https://www.mvcr.cz/chh/SCRIPT/rss.aspx?nid=',
-        'https://cedmohub.eu/cs/feed/',
-        'https://europeanvalues.cz/cs/feed/',
-        # 'https://demagog.cz/rss/index.atom', - Zatím vypnu, cedmohub postuje jak AFP, tak Demagog, tak aby nebylo 2x
-        'https://www.voxpot.cz/feed/',
+        'https://denikreferendum.cz/rss.xml', # A - New
+        'https://www.e15.cz/rss', # A - New
+        'https://www.forum24.cz/feed', # A - New
+        'https://hlidacipes.org/feed/', # A
+        'https://domaci.hn.cz/?m=rss', # A
+        'https://zahranicni.hn.cz/?m=rss', # A
+        'https://www.irozhlas.cz/rss/irozhlas/tag/7708693', # A - Ověřovna (vše)
+        'https://www.irozhlas.cz/rss/irozhlas/section/zpravy-domov', # A
+        'https://www.irozhlas.cz/rss/irozhlas/section/zpravy-svet', # A
+        'https://refresher.cz/rss', # A
+        'https://refresher.sk/rss', 
+        'https://www.respekt.cz/api/rss?type=articles&unlocked=1', # A
+        'https://www.seznamzpravy.cz/rss', # A
+        'https://www.voxpot.cz/feed/', # A
+        'https://zpravy.aktualne.cz/rss/', # A-
+        'https://www.denik.cz/rss/zpravy.html', # A-
+        'https://www.reflex.cz/rss', # A-
+        'https://servis.idnes.cz/rss.aspx?c=zpravodaj', # B+
+        'https://www.novinky.cz/rss', # B+
+        'https://servis.lidovky.cz/rss.aspx', # B+
+        # SK média
         'https://www.aktuality.sk/rss/',
-        'https://zpravy.aktualne.cz/rss/',
-        'https://www.seznamzpravy.cz/rss',
-        'https://www.irozhlas.cz/rss/irozhlas/section/zpravy-domov',
-        'https://www.irozhlas.cz/rss/irozhlas/section/zpravy-svet',
-        'https://www.lupa.cz/rss/clanky/',
-        'https://www.denik.cz/rss/zpravy.html',
-        'https://www.novinky.cz/rss',
-        'https://euractiv.cz/feed/',
-        'https://euractiv.sk/feed/',
-        'https://cc.cz/feed/',
-        'https://www.ceskenoviny.cz/sluzby/rss/cr.php',
-        'https://www.ceskenoviny.cz/sluzby/rss/svet.php',
-        'https://www.zive.cz/rss/sc-47/',
-        'https://servis.idnes.cz/rss.aspx?c=zpravodaj',
-        'https://ct24.ceskatelevize.cz/rss/tema/hlavni-zpravy-84313',
-        'https://domaci.hn.cz/?m=rss',
-        'https://zahranicni.hn.cz/?m=rss',
-        'https://www.investigace.cz/feed/',
         'https://www.sme.sk/rss-title',
-        'https://spravy.rtvs.sk/feed/',
-        'https://www.respekt.cz/api/rss?type=articles&unlocked=1',
-        'https://refresher.cz/rss',
-        'https://refresher.sk/rss',
         'https://www.tyzden.sk/feed/',
         'https://hnonline.sk/feed',
         'http://www.teraz.sk/rss/slovensko.rss',
         'http://www.teraz.sk/rss/zahranicie.rss',
-        'https://www.topky.sk/rss/8/topky',
-        'https://pepikhipik.com/feed/'
+        # 'https://spravy.rtvs.sk/feed/', Odstraněno - přechod na státní STVR
+        # Ostatní
+        'https://www.mvcr.cz/chh/SCRIPT/rss.aspx?nid=',
+        'https://cedmohub.eu/cs/feed/',
+        'https://europeanvalues.cz/cs/feed/',
+        'https://www.lupa.cz/rss/clanky/',
+        'https://euractiv.cz/feed/',
+        'https://euractiv.sk/feed/',
+        'https://cc.cz/feed/',
+        'https://www.zive.cz/rss/sc-47/',
+        'https://www.investigace.cz/feed/',
+        'https://pepikhipik.com/feed/' # New
+        'https://www.wired.cz/atom/feed.xml' # New
+        'https://cesti-elfove.cz/feed/' # New (vše)
         # Přidejte další RSS kanály podle potřeby
     ]
 
