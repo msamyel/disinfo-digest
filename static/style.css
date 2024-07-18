@@ -87,6 +87,10 @@ h3.date_divider a {
     color: #00ffc9;
 }
 
+p {
+    margin: 12px 0;
+}
+
 main a, header a, heaer a:hover {
     color: #f0f0f0;
     text-decoration: none;
@@ -169,6 +173,10 @@ article {
     color: #04F3F3;
     text-transform: uppercase;
 }
+
+.article__meta .article__category__link:hover {
+    text-decoration: underline;
+} 
 
 .article__meta i.fas {
     color: #04F3F3;
@@ -347,18 +355,27 @@ input[type="text"]::placeholder {
     font-family: "Inter", sans-serif;
 }
 
-button {
+input[type="date"]:before {
+  color: #060525;
+  content: attr(placeholder) !important;
+}
+
+button,
+.fc .fc-button-primary{
     padding: 10px;
     border: none;
     border-radius: 5px;
     background-color: #e70898;
     color: #ffffff;
     cursor: pointer;
+    transition: 0.5s;
 }
 
-button:hover {
+button:hover,
+.fc .fc-button-primary:hover {
     background-color: #00ffc9;
     color: #333;
+    transition: 0.3s ease;
 }
 
 .btn {
@@ -373,7 +390,6 @@ button:hover {
     margin: 6px 3px;
     font-size: 14px;
     font-weight: 600;
-
 }
 
 .btn:hover {
@@ -413,12 +429,6 @@ button:hover {
     .search-container {
         margin: 0 auto;
     }
-
-    span.article__domain {
-      display: block;
-      padding-top: 5px;
-      padding-left: 0;
-    }
 }
 
 @media all and (max-width: 1200px) {
@@ -431,8 +441,13 @@ button:hover {
   form input[type="text"] {
     flex: 1;
   }
-  form input[type="date"] {
-    flex: 1;
-    direction: row;
-  }
+}
+
+@media all and (max-width: 768px) {
+    span.article__domain,
+    span.article__category {
+      display: block;
+      padding-top: 5px;
+      padding-left: 0;
+    }
 }
