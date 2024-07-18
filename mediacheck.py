@@ -180,7 +180,6 @@ if __name__ == "__main__":
         'https://hnonline.sk/feed',
         'http://www.teraz.sk/rss/slovensko.rss',
         'http://www.teraz.sk/rss/zahranicie.rss',
-        'https://www.topky.sk/rss/8/topky',
         'https://pepikhipik.com/feed/'
         # Přidejte další RSS kanály podle potřeby
     ]
