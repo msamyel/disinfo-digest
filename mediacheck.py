@@ -12,10 +12,12 @@ import os
 from urllib.parse import urlparse
 from dotenv import load_dotenv
 from keywords import KEYWORDS_SEARCH_TABLE as KEYWORDS
+from classes.rss_feed import RssFeed
 
 NUM_THREADS = 5
 results = []
 load_dotenv()
+
 
 # Funkce pro kontrolu, zda článek obsahuje daná klíčová slova
 def contains_keywords(text):
@@ -44,9 +46,9 @@ def get_server_name(url):
 
 
 # Načtení a filtrování článků z RSS kanálů
-def fetch_and_filter_rss(feed_url, start_date, end_date):
+def fetch_and_filter_rss(feed, start_date, end_date):
     articles = []
-    feed = feedparser.parse(feed_url)
+    feed = feedparser.parse(feed.url)
     for entry in feed.entries:
         if not hasattr(entry, 'published'):
             continue  # Přeskočit články bez atributu 'published'
@@ -54,17 +56,17 @@ def fetch_and_filter_rss(feed_url, start_date, end_date):
         if start_date <= article_date <= end_date:
             summary_text = get_summary_text(entry)
             content = summary_text
-            keyword_found = contains_keywords(content)  # Změna: Uložení nalezeného klíčového slova
+            keyword_found = feed.tag_to_enforce or contains_keywords(content)
             link = entry.link
             source = get_server_name(link)
-            if keyword_found or source == 'cedmohub.eu':
+            if feed.save_all_articles or keyword_found:
                 articles.append({
                     'title': entry.title,
                     'link': link,
                     'published': entry.published,
                     'content': summary_text,
                     'source': source,  # Přidání serveru do slovníku
-                    'keyword': keyword_found if keyword_found else ''  # Přidání klíčového slova do slovníku
+                    'keyword': keyword_found  # Přidání klíčového slova do slovníku
                 })
     return articles
 
@@ -128,70 +130,74 @@ def save_articles_to_file(articles, output_file):
             f.write(line)
 
 
-def scrape_feed_to_results(feed_url, start_date, end_date):
-    print(f'scraping feed {feed_url} at {time.strftime("%H:%M:%S", time.gmtime())}')
+def scrape_feed_to_results(feed, start_date, end_date):
+    print(f'scraping feed {feed.url} at {time.strftime("%H:%M:%S", time.gmtime())}')
     try:
-        results.extend(fetch_and_filter_rss(feed_url, start_date, end_date))
+        results.extend(fetch_and_filter_rss(feed, start_date, end_date))
     except Exception as e:
-        print(f'error scraping feed {feed_url}: {e}')
-    print(f'done scraping feed {feed_url} at {time.strftime("%H:%M:%S", time.gmtime())}')
+        print(f'error scraping feed {feed.url}: {e}')
+    print(f'done scraping feed {feed.url} at {time.strftime("%H:%M:%S", time.gmtime())}')
 
 
 # Hlavní program
 if __name__ == "__main__":
     # Seznam RSS kanálů
-    feeds = [
-        # Weby s hodnocením A, A-, B+ z https://www.nfnz.cz/rating-medii/
-        'https://ct24.ceskatelevize.cz/rss/tema/hlavni-zpravy-84313', # A
-        'https://www.ceskenoviny.cz/sluzby/rss/cr.php', # A
-        'https://www.ceskenoviny.cz/sluzby/rss/svet.php', # A
-        'https://denikn.cz/minuta/feed/', # A
-        'https://denikn.cz/rss/', # A
-        'https://dennikn.sk/rss/', 
-        'https://dennikn.sk/minuta/feed',
-        'https://denikreferendum.cz/rss.xml', # A - New
-        'https://www.e15.cz/rss', # A - New
-        'https://www.forum24.cz/feed', # A - New
-        'https://hlidacipes.org/feed/', # A
-        'https://domaci.hn.cz/?m=rss', # A
-        'https://zahranicni.hn.cz/?m=rss', # A
-        'https://www.irozhlas.cz/rss/irozhlas/tag/7708693', # A - Ověřovna (vše)
-        'https://www.irozhlas.cz/rss/irozhlas/section/zpravy-domov', # A
-        'https://www.irozhlas.cz/rss/irozhlas/section/zpravy-svet', # A
-        'https://refresher.cz/rss', # A
-        'https://refresher.sk/rss', 
-        'https://www.respekt.cz/api/rss?type=articles&unlocked=1', # A
-        'https://www.seznamzpravy.cz/rss', # A
-        'https://www.voxpot.cz/feed/', # A
-        'https://zpravy.aktualne.cz/rss/', # A-
-        'https://www.denik.cz/rss/zpravy.html', # A-
-        'https://www.reflex.cz/rss', # A-
-        'https://servis.idnes.cz/rss.aspx?c=zpravodaj', # B+
-        'https://www.novinky.cz/rss', # B+
-        'https://servis.lidovky.cz/rss.aspx', # B+
-        # SK média
-        'https://www.aktuality.sk/rss/',
-        'https://www.sme.sk/rss-title',
-        'https://www.tyzden.sk/feed/',
-        'https://hnonline.sk/feed',
-        'http://www.teraz.sk/rss/slovensko.rss',
-        'http://www.teraz.sk/rss/zahranicie.rss',
-        # 'https://spravy.rtvs.sk/feed/', Odstraněno - přechod na státní STVR
-        # Ostatní
-        'https://www.mvcr.cz/chh/SCRIPT/rss.aspx?nid=',
-        'https://cedmohub.eu/cs/feed/',
-        'https://europeanvalues.cz/cs/feed/',
-        'https://www.lupa.cz/rss/clanky/',
-        'https://euractiv.cz/feed/',
-        'https://euractiv.sk/feed/',
-        'https://cc.cz/feed/',
-        'https://www.zive.cz/rss/sc-47/',
-        'https://www.investigace.cz/feed/',
-        'https://pepikhipik.com/feed/' # New
-        'https://www.wired.cz/atom/feed.xml' # New
-        'https://cesti-elfove.cz/feed/' # New (vše)
-        # Přidejte další RSS kanály podle potřeby
-    ]
+    feeds = []
+    feeds.append(RssFeed('https://ct24.ceskatelevize.cz/rss/tema/hlavni-zpravy-84313')),  # A
+    feeds.append(RssFeed('https://www.ceskenoviny.cz/sluzby/rss/cr.php')),  # A
+    feeds.append(RssFeed('https://www.ceskenoviny.cz/sluzby/rss/svet.php')),  # A
+    feeds.append(RssFeed('https://denikn.cz/minuta/feed/')),  # A
+    feeds.append(RssFeed('https://denikn.cz/rss/')),  # A
+    feeds.append(RssFeed('https://dennikn.sk/rss/')),
+    feeds.append(RssFeed('https://dennikn.sk/minuta/feed')),
+    feeds.append(RssFeed('https://denikreferendum.cz/rss.xml')),  # A - New
+    feeds.append(RssFeed('https://www.e15.cz/rss')),  # A - New
+    feeds.append(RssFeed('https://www.forum24.cz/feed')),  # A - New
+    feeds.append(RssFeed('https://hlidacipes.org/feed/')),  # A
+    feeds.append(RssFeed('https://domaci.hn.cz/?m=rss')),  # A
+    feeds.append(RssFeed('https://zahranicni.hn.cz/?m=rss')),  # A
+    feeds.append(RssFeed('https://www.irozhlas.cz/rss/irozhlas/tag/7708693',
+                         save_all_articles=True,
+                         tag_to_enforce='fact-checking')),  # A - Ověřovna (vše)
+    feeds.append(RssFeed('https://www.irozhlas.cz/rss/irozhlas/section/zpravy-domov')),  # A
+    feeds.append(RssFeed('https://www.irozhlas.cz/rss/irozhlas/section/zpravy-svet')),  # A
+    feeds.append(RssFeed('https://refresher.cz/rss')),  # A
+    feeds.append(RssFeed('https://refresher.sk/rss')),
+    feeds.append(RssFeed('https://www.respekt.cz/api/rss?type=articles&unlocked=1')),  # A
+    feeds.append(RssFeed('https://www.seznamzpravy.cz/rss')),  # A
+    feeds.append(RssFeed('https://www.voxpot.cz/feed/')),  # A
+    feeds.append(RssFeed('https://zpravy.aktualne.cz/rss/')),  # A-
+    feeds.append(RssFeed('https://www.denik.cz/rss/zpravy.html')),  # A-
+    feeds.append(RssFeed('https://www.reflex.cz/rss')),  # A-
+    feeds.append(RssFeed('https://servis.idnes.cz/rss.aspx?c=zpravodaj',))  # B+
+    feeds.append(RssFeed('https://www.novinky.cz/rss')),  # B+
+    feeds.append(RssFeed('https://servis.lidovky.cz/rss.aspx')),  # B+
+    # SK média
+    feeds.append(RssFeed('https://www.aktuality.sk/rss/')),
+    feeds.append(RssFeed('https://www.sme.sk/rss-title')),
+    feeds.append(RssFeed('https://www.tyzden.sk/feed/')),
+    feeds.append(RssFeed('https://hnonline.sk/feed')),
+    feeds.append(RssFeed('http://www.teraz.sk/rss/slovensko.rss')),
+    feeds.append(RssFeed('http://www.teraz.sk/rss/zahranicie.rss')),
+    # 'https://spravy.rtvs.sk/feed/', Odstraněno - přechod na státní STVR
+    # Ostatní
+    feeds.append(RssFeed('https://www.mvcr.cz/chh/SCRIPT/rss.aspx?nid=')),
+    feeds.append(RssFeed('https://cedmohub.eu/cs/feed/',
+                         save_all_articles=True)),
+    feeds.append(RssFeed('https://europeanvalues.cz/cs/feed/')),
+    feeds.append(RssFeed('https://www.lupa.cz/rss/clanky/')),
+    feeds.append(RssFeed('https://euractiv.cz/feed/')),
+    feeds.append(RssFeed('https://euractiv.sk/feed/')),
+    feeds.append(RssFeed('https://cc.cz/feed/')),
+    feeds.append(RssFeed('https://www.zive.cz/rss/sc-47/')),
+    feeds.append(RssFeed('https://www.investigace.cz/feed/')),
+    feeds.append(RssFeed('https://pepikhipik.com/feed/')),  # New
+    feeds.append(RssFeed('https://www.wired.cz/atom/feed.xml')),  # New
+    feeds.append(RssFeed('https://cesti-elfove.cz/feed/',
+                         save_all_articles=True,
+                         tag_to_enforce='fact-checking')),  # New (vše)
+    # Přidejte další RSS kanály podle potřeby
+
 
     # Datumové rozmezí (datumy s časovou zónou UTC)
     now = datetime.now().astimezone(pytz.UTC)
