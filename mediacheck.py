@@ -46,10 +46,10 @@ def get_server_name(url):
 
 
 # Načtení a filtrování článků z RSS kanálů
-def fetch_and_filter_rss(feed, start_date, end_date):
+def fetch_and_filter_rss(feed: RssFeed, start_date, end_date):
     articles = []
-    feed = feedparser.parse(feed.url)
-    for entry in feed.entries:
+    feed_content = feedparser.parse(feed.url)
+    for entry in feed_content.entries:
         if not hasattr(entry, 'published'):
             continue  # Přeskočit články bez atributu 'published'
         article_date = dateparse(entry.published).replace(tzinfo=pytz.UTC)
@@ -69,44 +69,6 @@ def fetch_and_filter_rss(feed, start_date, end_date):
                     'keyword': keyword_found  # Přidání klíčového slova do slovníku
                 })
     return articles
-
-
-# Uložení obsahu RSS kanálů do souboru
-def save_rss_content_to_file(rss_content, file_name):
-    with open(file_name, 'w', encoding='utf-8') as f:
-        json.dump(rss_content, f, ensure_ascii=False, indent=4)
-
-
-# Načtení obsahu RSS kanálů ze souboru
-def load_rss_content_from_file(file_name):
-    rss_content = []
-    if os.path.exists(file_name):
-        with open(file_name, 'r', encoding='utf-8') as f:
-            rss_content = json.load(f)
-    return rss_content
-
-
-# Aktualizace obsahu RSS kanálů ve souboru na základě nových dat
-def update_rss_content_file(feeds, file_name, start_date, end_date):
-    # Načtení existujícího obsahu
-    rss_content = load_rss_content_from_file(file_name)
-
-    # Získání nových článků a jejich filtrování
-    new_articles = []
-    for feed_url in feeds:
-        new_articles.extend(fetch_and_filter_rss(feed_url, start_date, end_date))
-
-    # Přidání nových článků k existujícím, pokud ještě nejsou přítomny
-    existing_links = {article['link'] for article in rss_content}
-    for article in new_articles:
-        if article['link'] not in existing_links:
-            rss_content.append(article)
-            existing_links.add(article['link'])
-
-    # Uložení aktualizovaného obsahu zpět do souboru
-    save_rss_content_to_file(rss_content, file_name)
-
-    return rss_content
 
 
 # Zobrazení filtrovaných článků na obrazovku
@@ -130,12 +92,12 @@ def save_articles_to_file(articles, output_file):
             f.write(line)
 
 
-def scrape_feed_to_results(feed, start_date, end_date):
+def scrape_feed_to_results(feed: RssFeed, start_date, end_date):
     print(f'scraping feed {feed.url} at {time.strftime("%H:%M:%S", time.gmtime())}')
     try:
         results.extend(fetch_and_filter_rss(feed, start_date, end_date))
     except Exception as e:
-        print(f'error scraping feed {feed.url}: {e}')
+        print(f'error scraping feed {feed.url}: {e})')
     print(f'done scraping feed {feed.url} at {time.strftime("%H:%M:%S", time.gmtime())}')
 
 
@@ -169,7 +131,7 @@ if __name__ == "__main__":
     feeds.append(RssFeed('https://zpravy.aktualne.cz/rss/')),  # A-
     feeds.append(RssFeed('https://www.denik.cz/rss/zpravy.html')),  # A-
     feeds.append(RssFeed('https://www.reflex.cz/rss')),  # A-
-    feeds.append(RssFeed('https://servis.idnes.cz/rss.aspx?c=zpravodaj',))  # B+
+    feeds.append(RssFeed('https://servis.idnes.cz/rss.aspx?c=zpravodaj', ))  # B+
     feeds.append(RssFeed('https://www.novinky.cz/rss')),  # B+
     feeds.append(RssFeed('https://servis.lidovky.cz/rss.aspx')),  # B+
     # SK média
@@ -197,7 +159,6 @@ if __name__ == "__main__":
                          save_all_articles=True,
                          tag_to_enforce='fact-checking')),  # New (vše)
     # Přidejte další RSS kanály podle potřeby
-
 
     # Datumové rozmezí (datumy s časovou zónou UTC)
     now = datetime.now().astimezone(pytz.UTC)
