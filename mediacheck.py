@@ -114,7 +114,6 @@ if __name__ == "__main__":
     feeds.append(RssFeed('https://dennikn.sk/minuta/feed')),
     feeds.append(RssFeed('https://denikreferendum.cz/rss.xml')),  # A - New
     feeds.append(RssFeed('https://www.e15.cz/rss')),  # A - New
-    feeds.append(RssFeed('https://www.forum24.cz/feed')),  # A - New
     feeds.append(RssFeed('https://hlidacipes.org/feed/')),  # A
     feeds.append(RssFeed('https://domaci.hn.cz/?m=rss')),  # A
     feeds.append(RssFeed('https://zahranicni.hn.cz/?m=rss')),  # A
