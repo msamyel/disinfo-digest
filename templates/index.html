@@ -4,113 +4,113 @@
 {{ moment.include_moment() }}
 {{ moment.lang('cs') }}
 <div class="flex-container">
-<main>
-    <script src='https://cdn.jsdelivr.net/npm/fullcalendar/index.global.min.js'></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.42/moment-timezone-with-data.min.js"></script>
+    <main>
+        <script src='https://cdn.jsdelivr.net/npm/fullcalendar/index.global.min.js'></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.42/moment-timezone-with-data.min.js"></script>
 
-    <script>
+        <script>
 
-      document.addEventListener('DOMContentLoaded', function() {
-        const calendarEl = document.getElementById('calendar')
-        const calendar = new FullCalendar.Calendar(calendarEl, {
-          initialView: 'dayGridMonth',
-          firstDay: 1,
-          events: [
-            {% for article_count in article_counts %}
-            {
-              title: '{{ article_count.count }} článků',
-              start: '{{ article_count.date }}',
-              url: '/date/{{ article_count.date }}#{{ article_count.date }}'
-            },
-            {% endfor %}
-          ]
-        })
-        calendar.render()
-      })
+            document.addEventListener('DOMContentLoaded', function() {
+              const calendarEl = document.getElementById('calendar')
+              const calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                firstDay: 1,
+                events: [
+                  {% for article_count in article_counts %}
+                  {
+                    title: '{{ article_count.count }} článků',
+                    start: '{{ article_count.date }}',
+                    url: '/date/{{ article_count.date }}#{{ article_count.date }}'
+                  },
+                  {% endfor %}
+                ]
+              })
+              calendar.render()
+            })
 
-    </script>
+        </script>
 
-
-{% if not articles %}
-    <div class="heading-container">
-        <h2 class="week_id">Žádné články</h2>
-    </div>
-{% else %}
-{% if is_search %}
+        {% if not articles %}
         <div class="heading-container">
-    <h2 class="week_id">Výsledky vyhledávání</h2>
+            <h2 class="week_id">Žádné články</h2>
         </div>
-{% elif date %}
+        {% else %}
         <div class="heading-container">
-    <h2 class="week_id"><span class="date-to-format" data-date="{{start_day}}" data-format="DD. MMMM">></span>
-        –
-        <span class="date-to-format" data-date="{{end_day}}" data-format="DD. MMMM"></span></h2>
-<h3 class="week_id">Rok {{ year }}, týden {{ week }}.</h3>
-                </div>
-{% else %}
-        <div class="heading-container">
-    <h2 class="week_id">Nejnovější články</h2>
-    </div>
-{% endif %}
-
-    {% set ns = namespace(day='') %}
-    {% for article in articles %}
+            {% if is_search %}
+            <h2 class="week_id">Výsledky vyhledávání</h2>
+            {% elif date %}
+            <h2 class="week_id"><span class="date-to-format" data-date="{{start_day}}" data-format="DD. MMMM">></span>
+                –
+                <span class="date-to-format" data-date="{{end_day}}" data-format="DD. MMMM"></span></h2>
+            <h3 class="week_id">Rok {{ year }}, týden {{ week }}.</h3>
+            {% elif tag_filter %}
+            <h2 class="week_id">{{ title }}</h2>
+            {% else %}
+            <h2 class="week_id">Nejnovější články</h2>
+            {% endif %}
+        </div>
+        {% set ns = namespace(day='') %}
+        {% for article in articles %}
         {% if article.published_at_cet_str != ns.day %}
-            <h3 class="date_divider">
-                <a
-                        id="{{ article.published_at_cet_str }}"
-                        href="#{{ article.published_at_cet_str }}"
-                        class="date-to-format"
-                        data-date="{{ article.published_at_cet}}"
-                        data-format="dddd LL"></a>
-            </h3>
-            {% set ns.day = article.published_at_cet_str %}
+        <h3 class="date_divider">
+            <a
+                    id="{{ article.published_at_cet_str }}"
+                    href="#{{ article.published_at_cet_str }}"
+                    class="date-to-format"
+                    data-date="{{ article.published_at_cet}}"
+                    data-format="dddd LL"></a>
+        </h3>
+        {% set ns.day = article.published_at_cet_str %}
         {% endif %}
         <article>
             <h4 class="article__title"><a target="_blank" href="{{ article.url }}">{{ article.title|safe }}</a></h4>
 
             <p class="article__meta">
-                <i class="fas fa-calendar"></i> <span class="date-to-format" data-date="{{ article.published_at_cet }}" data-format="dddd LL"></span>
+                <i class="fas fa-calendar"></i> <span class="date-to-format" data-date="{{ article.published_at_cet }}"
+                                                      data-format="dddd LL"></span>
                 <span class="article__domain"><i class="fas fa-link"></i></i> {{ article.domain }}</span>
                 {% if article.hashtags %}
-                <span class="article__category"><i class="fas fa-tags"></i> <a class="article__category__link" href="/tags/{{ tags_accent_table[article.hashtags] }}">{{ article.hashtags }}</a></span>
+                <span class="article__category"><i class="fas fa-tags"></i> <a class="article__category__link"
+                                                                               href="/tags/{{ tags_accent_table[article.hashtags] }}">{{ article.hashtags }}</a></span>
                 {% endif %}
             </p>
             <p class="article__content">{{ article.content|safe }}
-            <span class="article__content article__content__read_more"><a target="_blank" href="{{ article.url }}">Číst&nbsp;dále <i class="fa-solid fa-angle-right"></i></a></span>
+                <span class="article__content article__content__read_more"><a target="_blank" href="{{ article.url }}">Číst&nbsp;dále <i
+                        class="fa-solid fa-angle-right"></i></a></span>
             </p>
         </article>
-    {% endfor %}
-{% endif %}
-</main>
-<aside>
-    <h2>Kategorie</h2>
-    <div class="aside-categories">
-        <ul>
-            {% for tag_accented, tag_unaccented in tags_accent_table.items() %}
-                <li class="post-cat"><a class="post-cat-text" href="/tags/{{ tag_unaccented }}">{{ tag_accented }}</a> <span class="post-cat-number">({{ tag_counts[tag_accented] or 0 }})</span></li>
-            {% endfor %}
-        </ul>
-    </div>
-    <div id='calendar'></div>
-</aside>
+        {% endfor %}
+        {% endif %}
+    </main>
+    <aside>
+        <h2>Kategorie</h2>
+        <div class="aside-categories">
+            <ul>
+                {% for tag_accented, tag_unaccented in tags_accent_table.items() %}
+                <li class="post-cat"><a class="post-cat-text" href="/tags/{{ tag_unaccented }}">{{ tag_accented }}</a>
+                    <span class="post-cat-number">({{ tag_counts[tag_accented] or 0 }})</span></li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div id='calendar'></div>
+    </aside>
 </div>
 
 <!-- transform all dates with the class "date-to-format" using moment.js -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // Select all elements with the class "date-to-format"
-            var elements = document.querySelectorAll('.date-to-format');
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Select all elements with the class "date-to-format"
+        var elements = document.querySelectorAll('.date-to-format');
 
-            elements.forEach(function(element) {
-                var date = element.getAttribute('data-date');
-                var format = element.getAttribute('data-format');
+        elements.forEach(function(element) {
+            var date = element.getAttribute('data-date');
+            var format = element.getAttribute('data-format');
 
-                var dateInCET = moment(date).tz('Europe/Berlin');
-                var formattedDate = dateInCET.format(format);
+            var dateInCET = moment(date).tz('Europe/Berlin');
+            var formattedDate = dateInCET.format(format);
 
-                element.textContent = formattedDate;
-            });
+            element.textContent = formattedDate;
         });
-    </script>
+    });
+</script>
 {% endblock %}

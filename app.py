@@ -21,6 +21,7 @@ cache = Cache(app)
 
 from models import *
 
+
 @app.route("/")
 def index():
     search_query = request.args.get('search_query')
@@ -108,19 +109,22 @@ def get_start_and_end_date_from_calendar_week(year, calendar_week):
 @app.route("/tags/<tag>")
 def index_filtered_by_tag(tag):
     accented_tag = get_accented_tag(tag)
+    title = accented_tag[0].upper() + accented_tag[1:]
     articles = (Article.exclude_hidden()
                 .filter(Article.hashtags.contains(accented_tag))
                 .order_by(Article.published_at_cet.desc(), Article.id.desc())
                 .all())
     return render_template(
         'index.html',
+        title=title,
         articles=articles,
         article_counts=get_article_counts(),
-        is_search=True,
+        is_search=False,
         tag_filter=tag,
         tags_accent_table=TAGS_ACCENT_TABLE,
         tag_counts=get_tag_counts_for_all_time()
     )
+
 
 @cache.cached(timeout=7200, key_prefix='article_counts')
 def get_article_counts():
@@ -138,8 +142,8 @@ def get_article_counts():
 def get_tag_counts_for_all_time():
     category_counts = (db.session
                        .query(
-                            Article.hashtags.label('tag'),
-                            sa.func.count(Article.id).label('count'))
+        Article.hashtags.label('tag'),
+        sa.func.count(Article.id).label('count'))
                        .filter(Article.is_hidden == False)
                        .group_by(Article.hashtags)
                        .all())
@@ -210,6 +214,7 @@ def hide_articles():
     db.session.commit()
     return "ok", 200
 
+
 @app.route("/changelog")
 def changelog():
     return render_template('changelog.html', title='Changelog')
@@ -259,6 +264,7 @@ def get_articles_grouped_by_week():
         .group_by(Article.year, Article.week)
         .all()
     )
+
 
 @app.cli.command('init-db')
 def init_db():
