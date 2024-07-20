@@ -27,9 +27,10 @@ def index():
     search_query = request.args.get('search_query')
     search_from = request.args.get('search_from')
     search_until = request.args.get('search_until')
+    current_page = request.args.get('page', 1, type=int)
 
     if search_from or search_until or search_query:
-        articles = get_filtered_articles(search_query, search_from, search_until)
+        articles = get_filtered_articles(search_query, search_from, search_until, current_page)
         is_search = True
     else:
         articles = get_newest_articles()
@@ -43,6 +44,7 @@ def index():
         search_query=search_query,
         search_from=search_from,
         search_until=search_until,
+        search_url_base=f"/?search_query={search_query}&from={search_from}&until={search_until}&",
         tags_accent_table=TAGS_ACCENT_TABLE,
         tag_counts=get_tag_counts_for_all_time()
     )
@@ -57,7 +59,7 @@ def get_newest_articles():
             .all())
 
 
-def get_filtered_articles(search_query, start_at, end_at):
+def get_filtered_articles(search_query, start_at, end_at, current_page):
     articles = Article.exclude_hidden().order_by(Article.published_at_cet_str.desc(), Article.id.desc())
     if search_query:
         search_query_lower_unaccented = sa.func.unaccent(search_query.lower())
@@ -71,7 +73,7 @@ def get_filtered_articles(search_query, start_at, end_at):
         articles = articles.filter(Article.published_at_cet >= start_at)
     if end_at:
         articles = articles.filter(Article.published_at_cet <= end_at)
-    return articles.all()
+    return articles.paginate(page=current_page, per_page=app.config["SEARCH_POSTS_PER_PAGE"], error_out=False)
 
 
 @app.route("/date/<int:year>-<int:month>-<int:day>")
@@ -106,14 +108,15 @@ def get_start_and_end_date_from_calendar_week(year, calendar_week):
     return monday, monday + datetime.timedelta(days=6.9)
 
 
-@app.route("/tags/<tag>")
+@app.route("/tags/<tag>/")
 def index_filtered_by_tag(tag):
+    current_page = request.args.get('page', 1, type=int)
     accented_tag = get_accented_tag(tag)
     title = accented_tag[0].upper() + accented_tag[1:]
     articles = (Article.exclude_hidden()
                 .filter(Article.hashtags.contains(accented_tag))
                 .order_by(Article.published_at_cet.desc(), Article.id.desc())
-                .all())
+                .paginate(page=current_page, per_page=app.config["SEARCH_POSTS_PER_PAGE"], error_out=False))
     return render_template(
         'index.html',
         title=title,
@@ -122,6 +125,7 @@ def index_filtered_by_tag(tag):
         is_search=False,
         tag_filter=tag,
         tags_accent_table=TAGS_ACCENT_TABLE,
+        search_url_base=f"/tags/{tag}/?",
         tag_counts=get_tag_counts_for_all_time()
     )
 
