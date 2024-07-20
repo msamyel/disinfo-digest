@@ -218,6 +218,10 @@ aside {
     border-bottom: 1px solid transparent;
 }
 
+.post-cat--selected {
+    border-bottom: 1px solid #04F3F3;
+}
+
 .post-cat:hover {
     border-bottom: 1px solid #04F3F3;
     transition: all 0.3s ease-out 0s;
