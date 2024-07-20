@@ -39,9 +39,9 @@
             {% if is_search %}
             <h2 class="week_id">Výsledky vyhledávání</h2>
             {% elif date %}
-            <h2 class="week_id"><span class="date-to-format" data-date="{{start_day}}" data-format="DD. MMMM">></span>
+            <h2 class="week_id"><span class="date-to-format" data-date="{{start_day}}" data-format="D. MMMM">></span>
                 –
-                <span class="date-to-format" data-date="{{end_day}}" data-format="DD. MMMM"></span></h2>
+                <span class="date-to-format" data-date="{{end_day}}" data-format="D. MMMM"></span></h2>
             <h3 class="week_id">Rok {{ year }}, týden {{ week }}.</h3>
             {% elif tag_filter %}
             <h2 class="week_id">{{ title }}</h2>
