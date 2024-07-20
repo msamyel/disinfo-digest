@@ -132,7 +132,6 @@ if __name__ == "__main__":
     feeds.append(RssFeed('https://www.reflex.cz/rss')),  # A-
     feeds.append(RssFeed('https://servis.idnes.cz/rss.aspx?c=zpravodaj', ))  # B+
     feeds.append(RssFeed('https://www.novinky.cz/rss')),  # B+
-    feeds.append(RssFeed('https://servis.lidovky.cz/rss.aspx')),  # B+
     # SK média
     feeds.append(RssFeed('https://www.aktuality.sk/rss/')),
     feeds.append(RssFeed('https://www.sme.sk/rss-title')),
