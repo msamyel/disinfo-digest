@@ -83,10 +83,10 @@
         {% endif %}
 
         {% if articles.has_prev %}
-        <p><a class="pagination__link" href="{{search_url_base}}page={{articles.prev_num}}">Předchozí stránka</a></p>
+        <div class="prev"><a class="pagination__link" href="{{search_url_base}}page={{articles.prev_num}}">Předchozí stránka</a></div>
         {% endif %}
         {% if articles.has_next %}
-        <p><a class="pagination__link" href="{{search_url_base}}page={{articles.next_num}}">Další stránka</a></p>
+        <div class="next"><a class="pagination__link" href="{{search_url_base}}page={{articles.next_num}}">Další stránka</a></div>
         {% endif %}
     </main>
     <aside>

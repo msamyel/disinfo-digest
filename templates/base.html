@@ -31,8 +31,8 @@
         <form action="/" method="get">
             <input type="text" placeholder="Hledat..." name="search_query" value="{{search_query if search_query }}">
             <div class="search-date-inner">
-              <input type="date" name="search_from" value="{{search_from}}">
-              <input type="date" name="search_until" value="{{search_until}}">
+                <div class="search-date"><label>Od:</label> <input type="date" name="search_from" value="{{search_from}}"></div>
+                <div class="search-date"><label>Do:</label> <input type="date" name="search_until" value="{{search_until}}"></div>
             </div>
             <button type="submit">Hledat</button>
         </form>

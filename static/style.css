@@ -7,7 +7,7 @@ body {
 
 header {
     color: #f0f0f0;
-    padding: 10px 0;
+    padding: 30px 0;
     text-align: center;
 }
 
@@ -63,6 +63,10 @@ main {
 
 .heading-container {
     text-align: center;
+}
+
+h1 {
+    margin: 0;
 }
 
 h1, h2, h3, h4, .article__title {
@@ -246,6 +250,7 @@ footer {
     text-align: center;
     font-size: 14px;
     padding: 0 20px;
+    margin-top: 15px;
 }
 
 .footer-inner {
@@ -336,6 +341,15 @@ footer a:hover {
     margin-left: auto;
 }
 
+.search-container label {
+    display: none;
+}
+
+.search-date-inner {
+    display: flex;
+    gap: 10px;
+}
+
 form {
     display: flex;
     flex-direction: row;
@@ -359,30 +373,10 @@ input[type="text"]::placeholder {
     font-family: "Inter", sans-serif;
 }
 
-input[type="date"]:before {
-  color: #060525;
-  content: attr(placeholder) !important;
-}
-
 button,
-.fc .fc-button-primary{
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    background-color: #e70898;
-    color: #ffffff;
-    cursor: pointer;
-    transition: 0.5s;
-}
-
-button:hover,
-.fc .fc-button-primary:hover {
-    background-color: #00ffc9;
-    color: #333;
-    transition: 0.3s ease;
-}
-
-.btn {
+.fc .fc-button-primary,
+.btn,
+.pagination__link {
     padding: 10px;
     border: none;
     border-radius: 5px;
@@ -391,18 +385,51 @@ button:hover,
     cursor: pointer;
     display: inline-block;
     text-decoration: none;
-    margin: 6px 3px;
     font-size: 14px;
     font-weight: 600;
+    transition: 0.5s ease;
 }
 
-.btn:hover {
+.btn:hover,
+.pagination__link:hover,
+button:hover,
+.fc .fc-button-primary:hover {
     background-color: #00ffc9;
     color: #333;
+    transition: 0.5s ease;
+}
+
+.next {
+    text-align: right;
 }
 
 /* Responzivita pro mobilní zařízení */
 @media all and (max-width: 992px) {
+    .search-container label {
+      display: block;
+      font-weight: 700;
+    }
+
+    .search-date {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding-bottom: 10px;
+      gap: 10px;
+    }
+
+    .search-date:nth-of-type(2) {
+      padding-bottom: 0;
+    }
+
+    .search-date-inner {
+      display: block;
+    }
+
+    input[type="date"] {
+      width: 100%;
+    }
+
     .flex-container {
       flex-direction: column;
       gap: 0;
@@ -431,23 +458,26 @@ button:hover,
     }
 
     .search-container {
-        margin: 0 auto;
+      margin: 0 auto;
     }
 }
 
 @media all and (max-width: 1200px) {
 
-  form {
-    flex-direction: column;
-    display: flex;
-  }
+    form {
+      flex-direction: column;
+      display: flex;
+    }
 
-  form input[type="text"] {
-    flex: 1;
+    form input[type="text"] {
+      flex: 1;
   }
 }
 
 @media all and (max-width: 768px) {
+    header {
+      padding: 15px 0;
+    }
     span.article__domain,
     span.article__category {
       display: block;
