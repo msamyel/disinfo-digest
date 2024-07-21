@@ -399,8 +399,13 @@ button:hover,
     transition: 0.5s ease;
 }
 
+.pagination-container {
+    display: flex;
+    gap: 10px;
+}
+
 .next {
-    text-align: right;
+    margin-left: auto;
 }
 
 /* Responzivita pro mobilní zařízení */
