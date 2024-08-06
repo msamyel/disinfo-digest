@@ -11,7 +11,7 @@ import json
 import os
 from urllib.parse import urlparse
 from dotenv import load_dotenv
-from keywords import KEYWORDS_SEARCH_TABLE as KEYWORDS
+from keywords import KEYWORDS_SEARCH_TABLE as KEYWORDS, NEGATIVE_KEYWORDS
 from classes.rss_feed import RssFeed
 
 NUM_THREADS = 5
@@ -22,6 +22,12 @@ load_dotenv()
 # Funkce pro kontrolu, zda článek obsahuje daná klíčová slova
 def contains_keywords(text):
     text = text.lower()
+
+    # Vynech článek pokud obsahuje negativní klíčová slova
+    for negative_keyword in NEGATIVE_KEYWORDS:
+        if negative_keyword in text:
+            return None
+
     for key, full_word in KEYWORDS.items():
         if key in text:
             return full_word

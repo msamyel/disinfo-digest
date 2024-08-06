@@ -174,6 +174,8 @@ KEYWORDS_SEARCH_TABLE = {
     # 'himpatie': 'himpathy',
 }
 
+NEGATIVE_KEYWORDS = ['podvodní ', 'podvodních ', 'podvodního ']
+
 # Dictionary pro převod kategorií na verzi bez diakritiky a obráceně.
 TAGS_ACCENT_TABLE = {
     "dezinformace": "dezinformace",
