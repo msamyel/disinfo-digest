@@ -1,5 +1,27 @@
 # Dictionary pro vyhledávání slov v textu a jejich převod na kategorie.
 KEYWORDS_SEARCH_TABLE = {
+    # Jména dezinformátorů - https://www.seznamzpravy.cz/clanek/domaci-kauzy-kdo-v-cesku-vydelava-na-strachu-lidi-232386
+    'Tomáš Čermák': 'dezinformátoři',
+    'Lubomír Volný': 'dezinformátoři',
+    'Patrik Tušl': 'dezinformátoři',
+    'Jan Macháček': 'dezinformátoři',
+    'Petr Bílý': 'dezinformátoři',
+    'Jakub Netík': 'dezinformátoři',
+    'Pavel Zítko': 'dezinformátoři',
+    'Ladislav Vrabel': 'dezinformátoři',
+    'Vladimír Kapal': 'dezinformátoři',
+    'Jana Peterková': 'dezinformátoři',
+    'Jindřich Rajchl': 'dezinformátoři',
+    'Žarko Jovanovič': 'dezinformátoři',
+    'Ivan Smetana': 'dezinformátoři',
+    'Petr Hájek': 'dezinformátoři',
+    'Marek Pešl': 'dezinformátoři',
+    'Ondřej Geršl': 'dezinformátoři',
+    'Ondřej Thor': 'dezinformátoři',
+    'Raptor-TV': 'dezinformátoři',
+    'Aeronet': 'dezinformátoři',
+    'Aliance pro rodinu': 'dezinformátoři',
+
     # dezinformace
     'dezinform': 'dezinformace',
     'misinform': 'dezinformace',
@@ -36,28 +58,6 @@ KEYWORDS_SEARCH_TABLE = {
     'nenávistnými komentář': 'nenávistné komentáře',
     'nenávistné komentář': 'nenávistné komentáře',
 
-    # Jména dezinformátorů - https://www.seznamzpravy.cz/clanek/domaci-kauzy-kdo-v-cesku-vydelava-na-strachu-lidi-232386
-    'Tomáš Čermák': 'dezinformátoři',
-    'Lubomír Volný': 'dezinformátoři',
-    'Patrik Tušl': 'dezinformátoři',
-    'Jan Macháček': 'dezinformátoři',
-    'Petr Bílý': 'dezinformátoři',
-    'Jakub Netík': 'dezinformátoři',
-    'Pavel Zítko': 'dezinformátoři',
-    'Ladislav Vrabel': 'dezinformátoři',
-    'Vladimír Kapal': 'dezinformátoři',
-    'Jana Peterková': 'dezinformátoři',
-    'Jindřich Rajchl': 'dezinformátoři',
-    'Žarko Jovanovič': 'dezinformátoři',
-    'Ivan Smetana': 'dezinformátoři',
-    'Petr Hájek': 'dezinformátoři',
-    'Marek Pešl': 'dezinformátoři',
-    'Ondřej Geršl': 'dezinformátoři',
-    'Ondřej Thor': 'dezinformátoři',
-    'Raptor-TV': 'dezinformátoři',
-    'Aeronet': 'dezinformátoři',
-    'Aliance pro rodinu': 'dezinformátoři',
-
     # AI
     'umělá intelig': 'umělá inteligence',
     'umělé intelig': 'umělá inteligence',
@@ -84,7 +84,7 @@ KEYWORDS_SEARCH_TABLE = {
     'malware': 'kyberbezpečnost',
     'hijacking': 'kyberbezpečnost',
     'NÚKIB': 'kyberbezpečnost',
-    
+
     # Podvodné praktiky
     'podvod': 'podvod',
     'spam': 'podvod',
@@ -139,13 +139,13 @@ KEYWORDS_SEARCH_TABLE = {
     'redpilling': 'radikalizace',
     'radikali': 'radikalizace',
     'weaponiz': 'radikalizace',
-    'MAGA': 'radikalizace', #new
+    'MAGA': 'radikalizace',  # new
     'qanon': 'radikalizace',
     'infowars': 'radikalizace',
-    'trumpismus': 'radikalizace', #new
-    'extremis': 'radikalizace', #new
-    'antisemi': 'radikalizace', #new
-    'radikál': 'radikalizace', #new
+    'trumpismus': 'radikalizace',  # new
+    'extremis': 'radikalizace',  # new
+    'antisemi': 'radikalizace',  # new
+    'radikál': 'radikalizace',  # new
 
     # Muži - seximus?
     'manosféra': 'sexismus',
@@ -156,7 +156,7 @@ KEYWORDS_SEARCH_TABLE = {
     'šovin': 'sexismus',
 
     # Terorismus
-    'teroris': 'terorismus', #new
+    'teroris': 'terorismus',  # new
 
     # Hybridní hrozby
     'hybridní hrozb': 'hybridní hrozby',
