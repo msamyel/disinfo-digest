@@ -37,8 +37,6 @@ def contains_keywords(text):
 # Funkce pro získání textu z entry summary
 def get_summary_text(entry):
     summary_text = entry.summary if 'summary' in entry else ''
-    if '<' in summary_text and '>' in summary_text:  # Kontrola, zda obsahuje HTML značky
-        return BeautifulSoup(summary_text, 'html.parser').get_text()
     return summary_text
 
 
@@ -61,16 +59,20 @@ def fetch_and_filter_rss(feed: RssFeed, start_date, end_date):
         article_date = dateparse(entry.published).replace(tzinfo=pytz.UTC)
         if start_date <= article_date <= end_date:
             summary_text = get_summary_text(entry)
-            content = summary_text
+            content = entry.title + ' ' + summary_text
             keyword_found = feed.tag_to_enforce or contains_keywords(content)
             link = entry.link
             source = get_server_name(link)
+
             if feed.save_all_articles or keyword_found:
+                # escape HTML entities such as &nbsp;
+                escaped_title = BeautifulSoup(entry.title, 'html.parser').get_text()
+                escaped_summary = BeautifulSoup(summary_text, 'html.parser').get_text()
                 articles.append({
-                    'title': entry.title,
+                    'title': escaped_title,
                     'link': link,
                     'published': entry.published,
-                    'content': summary_text,
+                    'content': escaped_summary,
                     'source': source,  # Přidání serveru do slovníku
                     'keyword': keyword_found  # Přidání klíčového slova do slovníku
                 })
@@ -166,7 +168,7 @@ if __name__ == "__main__":
 
     # Datumové rozmezí (datumy s časovou zónou UTC)
     now = datetime.now().astimezone(pytz.UTC)
-    start_date = now - timedelta(hours=4)
+    start_date = now - timedelta(hours=48)
     end_date = now
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=NUM_THREADS) as executor:
