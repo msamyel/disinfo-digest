@@ -1,6 +1,7 @@
 from dotenv import load_dotenv
 from datetime import datetime, timezone
 import requests, os, json, re
+import urllib
 
 
 def create_bsky_connection(handle, app_password):
@@ -80,35 +81,42 @@ def create_bsky_post(session, article_title, article_url):
     )
 
 
-def connect_to_threads():
-    api_key = os.getenv('THREADS_API_KEY')
-    # The endpoint you want to interact with
+def create_threads_media_container(text, user_id, headers):
+    url = f'https://graph.threads.net/v1.0/{user_id}/threads?media_type=TEXT&text={text}'
+    response = requests.post(url, headers=headers)
+    if response.status_code == 200 and 'id' in response.json():
+        media_container_id = response.json()['id']
+        return media_container_id
 
-    url = 'https://graph.threads.net/v1.0/'
+    return None
 
+
+def publish_threads_media_container(media_container_id, user_id, headers):
+    url = f'https://graph.threads.net/v1.0/{user_id}/threads_publish?creation_id={media_container_id}'
+    response = requests.post(url, headers=headers)
+    if response.status_code == 200:
+        return True
+
+    return False
+
+
+def create_threads_post(text, user_id, api_key):
     # Headers for authentication
     headers = {
         'Authorization': f'Bearer {api_key}',
         'Content-Type': 'application/json'
     }
 
-    # Data to send in your request
-    data = {
-        'title': 'New Thread',
-        'body': 'This is a new thread created using the Threads API.'
-    }
+    escaped_text = escape_text_for_url(text)
+    media_container_id = create_threads_media_container(escaped_text, user_id, headers)
 
-    # Making a POST request to create a new thread
-    response = requests.post(url, headers=headers, json=data)
+    if media_container_id is None:
+        print('Failed to create media container')
+        return
 
-    print(response)
-    # Checking the response
-    if response.status_code == 201:
-        print('Thread created successfully:', response)
-    else:
-        print('Failed to create thread:', response)
+    if publish_threads_media_container(media_container_id, user_id, headers):
+        print('Thread published successfully')
 
 
-if __name__ == '__main__':
-    load_dotenv()
-    connect_to_threads()
+def escape_text_for_url(text):
+    return urllib.parse.quote(text, safe='')

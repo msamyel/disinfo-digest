@@ -9,7 +9,7 @@ import datetime
 import pytz
 from flask_moment import Moment
 from flask_caching import Cache
-from social import create_bsky_connection, create_bsky_post
+from social import create_bsky_connection, create_bsky_post, create_threads_post
 from keywords import TAGS_ACCENT_TABLE, get_accented_tag
 
 app = Flask(__name__)
@@ -161,10 +161,7 @@ def save_articles():
     if auth != app.config['API_SECRET']:
         return "ERROR: Unauthorized", 401
 
-    if app.config['BLUESKY_ENABLED']:
-        bsky_connection = create_bsky_connection(app.config['BLUESKY_HANDLE'], app.config['BLUESKY_APP_PASSWORD'])
-    else:
-        bsky_connection = None
+    articles_to_publish = []
 
     rss_content = request.get_json()
     for article in rss_content:
@@ -195,10 +192,30 @@ def save_articles():
             day=day,
             is_hidden=False
         )
+        articles_to_publish.append(new_article)
         db.session.add(new_article)
-        create_bsky_post(bsky_connection, article['title'], article['link'])
+
     db.session.commit()
+    publish_articles_to_social_media(articles_to_publish)
     return "Articles saved!", 200
+
+
+def publish_articles_to_social_media(articles):
+    if len(articles) == 0:
+        return
+
+    if app.config['BLUESKY_ENABLED']:
+        bsky_connection = create_bsky_connection(app.config['BLUESKY_HANDLE'], app.config['BLUESKY_APP_PASSWORD'])
+    else:
+        bsky_connection = None
+
+    for article in articles:
+        if bsky_connection:
+            create_bsky_post(bsky_connection, article.title, article.url)
+
+        if app.config['THREADS_ENABLED']:
+            threads_post_content = f'{article.title} {article.url}'
+            create_threads_post(threads_post_content, app.config['THREADS_USER_ID'], app.config['THREADS_API_KEY'])
 
 
 @app.route("/articles/hide", methods=['POST'])

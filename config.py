@@ -15,3 +15,7 @@ class Config:
     BLUESKY_HANDLE = os.getenv('BLUESKY_HANDLE')
     BLUESKY_APP_PASSWORD = os.getenv('BLUESKY_APP_PASSWORD')
     SEARCH_POSTS_PER_PAGE = int(os.getenv('SEARCH_POSTS_PER_PAGE', 10))
+
+    THREADS_ENABLED = os.getenv('THREADS_ENABLED', "false").lower() == "true"
+    THREADS_USER_ID = os.getenv('THREADS_USER_ID')
+    THREADS_API_KEY = os.getenv('THREADS_API_KEY')
