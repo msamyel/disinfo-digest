@@ -37,12 +37,12 @@ def create_bsky_post(session, article_title, article_url):
     now = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
 
     url_len = len(article_url)
-    #link length is not counted towards used characters over 31 chars
+    # link length is not counted towards used characters over 31 chars
     if url_len > 31:
         url_len = 31
 
-    if len(article_title) > (299-url_len):
-        article_title = article_title[:296-url_len]+"..."
+    if len(article_title) > (299 - url_len):
+        article_title = article_title[:296 - url_len] + "..."
 
     post_content = article_title + " " + article_url
     parsed_url = parse_url(post_content)
@@ -78,3 +78,37 @@ def create_bsky_post(session, article_title, article_url):
             "record": post,
         },
     )
+
+
+def connect_to_threads():
+    api_key = os.getenv('THREADS_API_KEY')
+    # The endpoint you want to interact with
+
+    url = 'https://graph.threads.net/v1.0/'
+
+    # Headers for authentication
+    headers = {
+        'Authorization': f'Bearer {api_key}',
+        'Content-Type': 'application/json'
+    }
+
+    # Data to send in your request
+    data = {
+        'title': 'New Thread',
+        'body': 'This is a new thread created using the Threads API.'
+    }
+
+    # Making a POST request to create a new thread
+    response = requests.post(url, headers=headers, json=data)
+
+    print(response)
+    # Checking the response
+    if response.status_code == 201:
+        print('Thread created successfully:', response)
+    else:
+        print('Failed to create thread:', response)
+
+
+if __name__ == '__main__':
+    load_dotenv()
+    connect_to_threads()
