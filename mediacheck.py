@@ -168,7 +168,7 @@ if __name__ == "__main__":
 
     # Datumové rozmezí (datumy s časovou zónou UTC)
     now = datetime.now().astimezone(pytz.UTC)
-    start_date = now - timedelta(hours=48)
+    start_date = now - timedelta(hours=4)
     end_date = now
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=NUM_THREADS) as executor:
