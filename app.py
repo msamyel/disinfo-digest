@@ -215,20 +215,21 @@ def publish_articles_to_social_media(articles):
     else:
         bsky_connection = None
 
-    for article in articles:
-        if bsky_connection:
-            create_bsky_post(bsky_connection, article.title, article.url)
+    with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
+        executor.map(
+            publish_article_to_social_media,
+            articles,
+            [bsky_connection] * len(articles)
+        )
 
-        if app.config['THREADS_ENABLED']:
-            threads_post_content = f'{article.title} {article.url}'
-            create_threads_post(threads_post_content, app.config['THREADS_USER_ID'], app.config['THREADS_API_KEY'])
 
+def publish_article_to_social_media(article, bsky_connection):
+    if bsky_connection:
+        create_bsky_post(bsky_connection, article.title, article.url)
 
-def publish_article_to_social_media(bsky_connection, article):
-    print(f"mocking social media post [BLUESKY]: {article}")
-    print(f"mocking social media post [THREADS]: {article}")
-    time.sleep(1)
-    print(f"mocking social media post [MASTODON]: {article}")
+    if app.config['THREADS_ENABLED']:
+        threads_post_content = f'{article.title} {article.url}'
+        create_threads_post(threads_post_content, app.config['THREADS_USER_ID'], app.config['THREADS_API_KEY'])
 
 
 @app.route("/articles/hide", methods=['POST'])
