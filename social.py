@@ -135,11 +135,13 @@ def publish_articles_to_social_media(articles):
         bsky_connection = None
 
     for article in articles:
-        print(f"Posting article to social media... {article.url}")
+        article_url = article['link']
+        article_title = article['title']
+        print(f"Posting article to social media... {article_url}")
 
         if bsky_connection:
-            create_bsky_post(bsky_connection, article.title, article.url)
+            create_bsky_post(bsky_connection, article_title, article_url)
 
         if config.THREADS_ENABLED:
-            threads_post_content = f'{article.title} {article.url}'
+            threads_post_content = f'{article_title} {article_url}'
             create_threads_post(threads_post_content, config.THREADS_USER_ID, config.THREADS_API_KEY)
