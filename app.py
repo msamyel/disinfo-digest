@@ -7,6 +7,8 @@ from flask import request, render_template
 import dateutil.parser
 import datetime
 import pytz
+import time
+import concurrent.futures
 from flask_moment import Moment
 from flask_caching import Cache
 from social import create_bsky_connection, create_bsky_post, create_threads_post
@@ -196,6 +198,10 @@ def save_articles():
         db.session.add(new_article)
 
     db.session.commit()
+    with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
+        executor.map(
+            publish_article_to_social_media,
+            articles_to_publish)
     publish_articles_to_social_media(articles_to_publish)
     return "Articles saved!", 200
 
@@ -216,6 +222,13 @@ def publish_articles_to_social_media(articles):
         if app.config['THREADS_ENABLED']:
             threads_post_content = f'{article.title} {article.url}'
             create_threads_post(threads_post_content, app.config['THREADS_USER_ID'], app.config['THREADS_API_KEY'])
+
+
+def publish_article_to_social_media(bsky_connection, article):
+    print(f"mocking social media post [BLUESKY]: {article}")
+    print(f"mocking social media post [THREADS]: {article}")
+    time.sleep(1)
+    print(f"mocking social media post [MASTODON]: {article}")
 
 
 @app.route("/articles/hide", methods=['POST'])
