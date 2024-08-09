@@ -19,3 +19,7 @@ class Config:
     THREADS_ENABLED = os.getenv('THREADS_ENABLED', "false").lower() == "true"
     THREADS_USER_ID = os.getenv('THREADS_USER_ID')
     THREADS_API_KEY = os.getenv('THREADS_API_KEY')
+
+    MASTODON_ENABLED = os.getenv('MASTODON_ENABLED', "false").lower() == "true"
+    MASTODON_URL = os.getenv("MASTODON_URL")
+    MASTODON_ACCESS_TOKEN = os.getenv("MASTODON_ACCESS_TOKEN")
