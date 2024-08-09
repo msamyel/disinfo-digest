@@ -13,6 +13,7 @@ from urllib.parse import urlparse
 from dotenv import load_dotenv
 from keywords import KEYWORDS_SEARCH_TABLE as KEYWORDS, NEGATIVE_KEYWORDS
 from classes.rss_feed import RssFeed
+from social import publish_articles_to_social_media
 
 NUM_THREADS = 5
 results = []
@@ -168,7 +169,7 @@ if __name__ == "__main__":
 
     # Datumové rozmezí (datumy s časovou zónou UTC)
     now = datetime.now().astimezone(pytz.UTC)
-    start_date = now - timedelta(hours=48)
+    start_date = now - timedelta(hours=4)
     end_date = now
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=NUM_THREADS) as executor:
@@ -187,4 +188,11 @@ if __name__ == "__main__":
     post_url = os.getenv('POST_ARTICLES_URL')
     api_secret = os.getenv('API_SECRET')
     res = requests.post(post_url, json=filtered_articles, headers={'X-Api-Key': api_secret})
-    print(res.status_code, res.content)
+    print(res.status_code)
+    print(res.content)
+
+    if res.status_code == 200:
+        new_article_urls = json.loads(res.content)
+        new_articles = [article for article in filtered_articles if
+                        article['link'] in new_article_urls]
+        publish_articles_to_social_media(new_articles)

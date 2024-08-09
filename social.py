@@ -1,5 +1,6 @@
 from dotenv import load_dotenv
 from datetime import datetime, timezone
+from config import Config
 import requests, os, json, re
 import urllib
 
@@ -120,3 +121,25 @@ def create_threads_post(text, user_id, api_key):
 
 def escape_text_for_url(text):
     return urllib.parse.quote(text, safe='')
+
+
+def publish_articles_to_social_media(articles):
+    if len(articles) == 0:
+        return
+
+    config = Config()
+
+    if config.BLUESKY_ENABLED:
+        bsky_connection = create_bsky_connection(config.BLUESKY_HANDLE, config.BLUESKY_APP_PASSWORD)
+    else:
+        bsky_connection = None
+
+    for article in articles:
+        print(f"Posting article to social media... {article.url}")
+
+        if bsky_connection:
+            create_bsky_post(bsky_connection, article.title, article.url)
+
+        if config.THREADS_ENABLED:
+            threads_post_content = f'{article.title} {article.url}'
+            create_threads_post(threads_post_content, config.THREADS_USER_ID, config.THREADS_API_KEY)

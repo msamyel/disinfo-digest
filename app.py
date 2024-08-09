@@ -7,6 +7,7 @@ from flask import request, render_template
 import dateutil.parser
 import datetime
 import pytz
+import json
 from flask_moment import Moment
 from flask_caching import Cache
 from social import create_bsky_connection, create_bsky_post, create_threads_post
@@ -196,26 +197,9 @@ def save_articles():
         db.session.add(new_article)
 
     db.session.commit()
-    publish_articles_to_social_media(articles_to_publish)
-    return "Articles saved!", 200
 
-
-def publish_articles_to_social_media(articles):
-    if len(articles) == 0:
-        return
-
-    if app.config['BLUESKY_ENABLED']:
-        bsky_connection = create_bsky_connection(app.config['BLUESKY_HANDLE'], app.config['BLUESKY_APP_PASSWORD'])
-    else:
-        bsky_connection = None
-
-    for article in articles:
-        if bsky_connection:
-            create_bsky_post(bsky_connection, article.title, article.url)
-
-        if app.config['THREADS_ENABLED']:
-            threads_post_content = f'{article.title} {article.url}'
-            create_threads_post(threads_post_content, app.config['THREADS_USER_ID'], app.config['THREADS_API_KEY'])
+    articles_to_publish_urls = [article.url for article in articles_to_publish]
+    return json.dumps(articles_to_publish_urls), 200
 
 
 @app.route("/articles/hide", methods=['POST'])
