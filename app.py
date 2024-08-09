@@ -198,6 +198,10 @@ def save_articles():
         db.session.add(new_article)
 
     db.session.commit()
+    with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
+        executor.map(
+            publish_article_to_social_media,
+            articles_to_publish)
     publish_articles_to_social_media(articles_to_publish)
     return "Articles saved!", 200
 
