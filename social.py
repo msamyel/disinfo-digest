@@ -150,7 +150,7 @@ def publish_articles_to_social_media(articles):
     for article in articles:
         article_url = article['link']
         article_title = article['title']
-        post_content_concatenated = f'{article.title} {article.url}'
+        post_content_concatenated = f'{article_title} {article_url}'
         print(f"Posting article to social media... {article_url}")
 
         if bsky_connection:
