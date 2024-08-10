@@ -123,6 +123,19 @@ def escape_text_for_url(text):
     return urllib.parse.quote(text, safe='')
 
 
+def create_mastodon_status(status_text, url, access_token):
+    headers = {
+        "Authorization": f"Bearer {access_token}",
+        "Content-Type": "application/json",
+    }
+    data = {
+        "status": status_text,
+    }
+    response = requests.post(url, headers=headers, data=json.dumps(data))
+    if response.status_code == 200:
+        print("Mastodon status posted successfully")
+
+
 def publish_articles_to_social_media(articles):
     if len(articles) == 0:
         return
@@ -137,11 +150,14 @@ def publish_articles_to_social_media(articles):
     for article in articles:
         article_url = article['link']
         article_title = article['title']
+        post_content_concatenated = f'{article.title} {article.url}'
         print(f"Posting article to social media... {article_url}")
 
         if bsky_connection:
             create_bsky_post(bsky_connection, article_title, article_url)
 
         if config.THREADS_ENABLED:
-            threads_post_content = f'{article_title} {article_url}'
-            create_threads_post(threads_post_content, config.THREADS_USER_ID, config.THREADS_API_KEY)
+            create_threads_post(post_content_concatenated, config.THREADS_USER_ID, config.THREADS_API_KEY)
+
+        if config.MASTODON_ENABLED:
+            create_mastodon_status(post_content_concatenated, config.MASTODON_URL, config.MASTODON_ACCESS_TOKEN)
