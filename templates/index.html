@@ -150,7 +150,6 @@
         var currentDate = urlPath.split('/').pop();
         [...dateDividers].forEach(function(dateDivider) {
             anchorDate = dateDivider.dataset.date.split(' ')[0];
-            console.log(anchorDate);
             if (anchorDate == currentDate) {
                 console.log('scrolling to ' + currentDate);
                 dateDivider.scrollIntoView();
@@ -165,12 +164,17 @@
         bodyElement = document.querySelector('body');
         appendAnchorLink(target, bodyElement, 'Top');
 
+        shortcuts = [];
+
         [...dateDividers].forEach(function(dateDivider) {
             anchorDate = dateDivider.dataset.date.split(' ')[0];
             anchorFormat = 'dddd DD. MMMM';
             formattedDate = getFormattedDate(anchorDate, anchorFormat);
-            appendAnchorLink(target, dateDivider, formattedDate);
+            button = appendAnchorLink(target, dateDivider, formattedDate);
+            shortcuts.push({shortcut: button, dateDivider: dateDivider});
         });
+
+        return shortcuts;
     }
 
     function appendAnchorLink(target, anchorTarget, text) {
@@ -182,6 +186,7 @@
             button.textContent = text;
             p.append(button);
             target.appendChild(p);
+            return button;
     }
 
 
@@ -189,7 +194,25 @@
             formatAllDates();
             dateDividers = getAllDividerAnchors();
             jumpToCurrentDateAnchor(dateDividers);
-            generateScrollShortcuts(dateDividers);
+            shortcuts = generateScrollShortcuts(dateDividers);
+
+            addEventListener("scroll", function(){
+                var scrollPosition = window.scrollY;
+                const scrollOffset = 300;
+
+                lastCurrentShortcut = undefined;
+                [...shortcuts].forEach(function({shortcut, dateDivider}){
+                    shortcut.classList.remove('current');
+                    var dateDividerPosition = dateDivider.getBoundingClientRect().top;
+                    if (dateDividerPosition < scrollOffset) {
+                        lastCurrentShortcut = shortcut;
+                    }
+                });
+
+                if (lastCurrentShortcut) {
+                    lastCurrentShortcut.classList.add('current');
+                }
+            });
     });
 </script>
 {% endblock %}

@@ -423,7 +423,12 @@ button:hover,
     cursor: pointer;
     width: 100%;
 }
+
 #scroll-shortcuts a:hover {
+    color: #00ffc9;
+}
+
+#scroll-shortcuts a.current {
     color: #00ffc9;
 }
 
