@@ -408,6 +408,25 @@ button:hover,
     margin-left: auto;
 }
 
+#scroll-shortcuts {
+    position: sticky;
+    top: 20px;
+}
+
+#scroll-shortcuts p {
+    text-align: right;
+}
+
+#scroll-shortcuts a {
+    font-variant: small-caps;
+    color: #00ae89;
+    cursor: pointer;
+    width: 100%;
+}
+#scroll-shortcuts a:hover {
+    color: #00ffc9;
+}
+
 /* Responzivita pro mobilní zařízení */
 @media all and (max-width: 992px) {
     .search-container label {

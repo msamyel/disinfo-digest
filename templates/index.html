@@ -103,6 +103,9 @@
             </ul>
         </div>
         <div id='calendar'></div>
+        <div id='scroll-shortcuts'>
+            <p><a>2024-08-06</a></p>
+        </div>
     </aside>
 </div>
 
@@ -116,14 +119,22 @@
             var date = element.getAttribute('data-date');
             var format = element.getAttribute('data-format');
 
-            var dateInCET = moment(date).tz('Europe/Berlin');
-            var formattedDate = dateInCET.format(format);
+            formattedDate = getFormattedDate(date, format);
 
             element.textContent = formattedDate;
         });
     }
 
-    function jumpToCurrentDateAnchor() {
+    function getFormattedDate(date, format) {
+         var dateInCET = moment(date).tz('Europe/Berlin');
+         return dateInCET.format(format);
+    }
+
+    function getAllDividerAnchors() {
+        return document.querySelectorAll('.date_divider a');
+    }
+
+    function jumpToCurrentDateAnchor(dateDividers) {
 
         var urlPath = new URL(window.location.href).pathname;
         if (!urlPath) {
@@ -137,8 +148,7 @@
         }
 
         var currentDate = urlPath.split('/').pop();
-        dateDividers = document.querySelectorAll('.date_divider a');
-        dateDividers.forEach(function(dateDivider) {
+        [...dateDividers].forEach(function(dateDivider) {
             anchorDate = dateDivider.dataset.date.split(' ')[0];
             console.log(anchorDate);
             if (anchorDate == currentDate) {
@@ -148,10 +158,38 @@
         });
     }
 
+    function generateScrollShortcuts(dateDividers) {
+        target = document.getElementById('scroll-shortcuts');
+        target.innerHTML = '';
+
+        bodyElement = document.querySelector('body');
+        appendAnchorLink(target, bodyElement, 'Top');
+
+        [...dateDividers].forEach(function(dateDivider) {
+            anchorDate = dateDivider.dataset.date.split(' ')[0];
+            anchorFormat = 'dddd DD. MMMM';
+            formattedDate = getFormattedDate(anchorDate, anchorFormat);
+            appendAnchorLink(target, dateDivider, formattedDate);
+        });
+    }
+
+    function appendAnchorLink(target, anchorTarget, text) {
+            var p = document.createElement('p');
+            var button = document.createElement('a');
+            button.onclick = function() {
+                anchorTarget.scrollIntoView();
+            };
+            button.textContent = text;
+            p.append(button);
+            target.appendChild(p);
+    }
+
 
     document.addEventListener("DOMContentLoaded", function() {
             formatAllDates();
-            jumpToCurrentDateAnchor();
+            dateDividers = getAllDividerAnchors();
+            jumpToCurrentDateAnchor(dateDividers);
+            generateScrollShortcuts(dateDividers);
     });
 </script>
 {% endblock %}
