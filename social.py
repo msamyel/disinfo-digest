@@ -44,7 +44,7 @@ class BskyPostPublisher:
     def __init__(self):
         self.session = None
 
-    def create_bsky_connection(self, handle, app_password):
+    def connect(self, handle, app_password):
         print(f"Logging in as {handle}...")
 
         resp = requests.post(
@@ -202,7 +202,7 @@ def publish_articles_to_social_media(articles):
     bsky_publisher = None
     if config.BLUESKY_ENABLED:
         bsky_publisher = BskyPostPublisher()
-        bsky_publisher.create_bsky_connection(config.BLUESKY_HANDLE, config.BLUESKY_APP_PASSWORD)
+        bsky_publisher.connect(config.BLUESKY_HANDLE, config.BLUESKY_APP_PASSWORD)
         bsky_post_joiner = BskyPostJoiner()
 
     for article in articles:
