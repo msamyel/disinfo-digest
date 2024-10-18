@@ -3,83 +3,139 @@ from datetime import datetime, timezone
 from config import Config
 import requests, os, json, re
 import urllib
+from urllib.parse import urlparse
 
 
-def create_bsky_connection(handle, app_password):
-    print(f"Logging in as {handle}...")
-
-    resp = requests.post(
-        "https://bsky.social/xrpc/com.atproto.server.createSession",
-        json={"identifier": handle, "password": app_password},
-    )
-    resp.raise_for_status()
-    session = resp.json()
-    return session
-
-
-def parse_url(text: str):
-    # code snippet from: https://docs.bsky.app/docs/advanced-guides/posts#mentions-and-links
-    # partial/naive URL regex based on: https://stackoverflow.com/a/3809435
-    # tweaked to disallow some training punctuation
-    url_regex = rb"[$|\W](https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*[-a-zA-Z0-9@%_\+~#//=])?)"
-    text_bytes = text.encode("UTF-8")
-    m = re.search(url_regex, text_bytes)
-    return {
-        "start": m.start(1),
-        "end": m.end(1),
-        "url": m.group(1).decode("UTF-8"),
-    }
+# get second level and top level domain from url
+def get_sld_tld(url):
+    if not url.startswith("http"):
+        url = "http://" + url
+    parsed_url = urlparse(url)
+    domain = parsed_url.netloc
+    domain_parts = domain.split('.')
+    if len(domain_parts) >= 2:
+        sld = domain_parts[-2]
+        tld = domain_parts[-1]
+        return f"{sld}.{tld}"
+    else:
+        return None
 
 
-def create_bsky_post(session, article_title, article_url):
-    if session is None:
-        return
-    print("Posting to bluesky..")
+class BskyPostData:
+    def __init__(self, title, url):
+        self.title = title
+        self.url = url
+        self.hostname = get_sld_tld(url)
 
-    now = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+    def get_bytes_to_hostname_start(self):
+        return len(self.title.encode("UTF-8")) + 2  # +2 is for space and parentheses
 
-    url_len = len(article_url)
-    # link length is not counted towards used characters over 31 chars
-    if url_len > 31:
-        url_len = 31
+    def get_bytes_to_hostname_end(self):
+        return self.get_bytes_to_hostname_start() + len(self.hostname.encode("UTF-8"))
 
-    if len(article_title) > (299 - url_len):
-        article_title = article_title[:296 - url_len] + "..."
+    def get_post_string(self):
+        return f"{self.title} ({self.hostname})"
 
-    post_content = article_title + " " + article_url
-    parsed_url = parse_url(post_content)
+    def get_length(self):
+        return len(self.get_post_string())
 
-    # Required fields that each post must include
-    post = {
-        "$type": "app.bsky.feed.post",
-        "text": article_title + " " + article_url,
-        "createdAt": now,
-        "langs": ["cs", "sk"],
-        "facets": [
-            {
+
+class BskyPostPublisher:
+    def __init__(self):
+        self.session = None
+
+    def create_bsky_connection(self, handle, app_password):
+        print(f"Logging in as {handle}...")
+
+        resp = requests.post(
+            "https://bsky.social/xrpc/com.atproto.server.createSession",
+            json={"identifier": handle, "password": app_password},
+        )
+        resp.raise_for_status()
+        session = resp.json()
+        self.session = session
+
+    def publish_bsky_post(self, post):
+        if not self.session:
+            print(post)
+            return
+        requests.post(
+            "https://bsky.social/xrpc/com.atproto.repo.createRecord",
+            headers={"Authorization": "Bearer " + self.session["accessJwt"]},
+            json={
+                "repo": self.session["did"],
+                "collection": "app.bsky.feed.post",
+                "record": post,
+            },
+        )
+
+
+class BskyPostJoiner:
+    def __init__(self):
+        self.posts = []
+        self.total_length = 0
+
+    def add_post(self, post: BskyPostData, publisher: BskyPostPublisher):
+        BSKY_MAX_LENGTH = 300
+        new_length = post.get_length()
+        if (self.total_length + new_length + 1) > BSKY_MAX_LENGTH:
+            # newly added post cannot fit into currently crafted post, publish all present posts and reset
+            self.create_joined_posts_and_publish(publisher)
+            self.posts = []
+            self.total_length = 0
+
+        self.posts.append(post)
+        self.total_length += post.get_length()
+
+    def create_joined_posts_and_publish(self, publisher: BskyPostPublisher):
+        if len(self.posts) == 0:
+            return
+        post = self.create_post_from_articles()
+        if not publisher:
+            print(post)
+            return
+        publisher.publish_bsky_post(post)
+
+    def create_post_from_articles(self):
+        if len(self.posts) == 0:
+            return None
+
+        now = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+        post_text = " ".join([post.get_post_string() for post in self.posts])
+
+        url_facets = []
+        last_byte = 0
+
+        for post in self.posts:
+            url_facets.append({
                 "index": {
-                    "byteStart": parsed_url["start"],
-                    "byteEnd": parsed_url["end"],
+                    "byteStart": last_byte + post.get_bytes_to_hostname_start(),
+                    "byteEnd": last_byte + post.get_bytes_to_hostname_end(),
                 },
                 "features": [
                     {
                         "$type": "app.bsky.richtext.facet#link",
-                        "uri": article_url
+                        "uri": post.url,
                     }
                 ]
-            }
-        ]
-    }
+            })
+            last_byte += post.get_bytes_to_hostname_end() + 2  # add 2 for closing parentheses and space
 
-    requests.post(
-        "https://bsky.social/xrpc/com.atproto.repo.createRecord",
-        headers={"Authorization": "Bearer " + session["accessJwt"]},
-        json={
-            "repo": session["did"],
-            "collection": "app.bsky.feed.post",
-            "record": post,
-        },
-    )
+        post = {
+            "$type": "app.bsky.feed.post",
+            "text": post_text,
+            "createdAt": now,
+            "langs": ["cs", "sk"],
+            "facets": url_facets
+        }
+
+        return post
+
+    def get_posts(self):
+        return self.posts
+
+    def get_total_length(self):
+        return self.total_length
 
 
 def create_threads_media_container(text, user_id, headers):
@@ -142,10 +198,12 @@ def publish_articles_to_social_media(articles):
 
     config = Config()
 
+    bsky_post_joiner = None
+    bsky_publisher = None
     if config.BLUESKY_ENABLED:
-        bsky_connection = create_bsky_connection(config.BLUESKY_HANDLE, config.BLUESKY_APP_PASSWORD)
-    else:
-        bsky_connection = None
+        bsky_publisher = BskyPostPublisher()
+        bsky_publisher.create_bsky_connection(config.BLUESKY_HANDLE, config.BLUESKY_APP_PASSWORD)
+        bsky_post_joiner = BskyPostJoiner()
 
     for article in articles:
         article_url = article['link']
@@ -153,11 +211,14 @@ def publish_articles_to_social_media(articles):
         post_content_concatenated = f'{article_title} {article_url}'
         print(f"Posting article to social media... {article_url}")
 
-        if bsky_connection:
-            create_bsky_post(bsky_connection, article_title, article_url)
+        if bsky_post_joiner:
+            bsky_post_joiner.add_post(BskyPostData(article_title, article_url), publisher=bsky_publisher)
 
         if config.THREADS_ENABLED:
             create_threads_post(post_content_concatenated, config.THREADS_USER_ID, config.THREADS_API_KEY)
 
         if config.MASTODON_ENABLED:
             create_mastodon_status(post_content_concatenated, config.MASTODON_URL, config.MASTODON_ACCESS_TOKEN)
+
+    if bsky_post_joiner:
+        bsky_post_joiner.create_joined_posts_and_publish(publisher=bsky_publisher)

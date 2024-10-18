@@ -10,7 +10,6 @@ import pytz
 import json
 from flask_moment import Moment
 from flask_caching import Cache
-from social import create_bsky_connection, create_bsky_post, create_threads_post
 from keywords import TAGS_ACCENT_TABLE, get_accented_tag
 
 app = Flask(__name__)
