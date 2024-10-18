@@ -101,7 +101,7 @@ class BskyPostJoiner:
             return None
 
         now = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
-        post_text = " ".join([post.get_post_string() for post in self.posts])
+        post_text = "\n".join([post.get_post_string() for post in self.posts])
 
         url_facets = []
         last_byte = 0
