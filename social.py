@@ -138,9 +138,9 @@ class BskyPostJoiner:
         return self.total_length
 
 
-def create_threads_media_container(text, user_id, headers):
+def create_threads_media_container(text, article_link, user_id, headers):
     url = f'https://graph.threads.net/v1.0/{user_id}/threads?media_type=TEXT&text={text}'
-    response = requests.post(url, headers=headers)
+    response = requests.post(url, headers=headers, data=f"link_attachment={article_link}")
     if response.status_code == 200 and 'id' in response.json():
         media_container_id = response.json()['id']
         return media_container_id
@@ -157,7 +157,7 @@ def publish_threads_media_container(media_container_id, user_id, headers):
     return False
 
 
-def create_threads_post(text, user_id, api_key):
+def create_threads_post(text, article_url, user_id, api_key):
     # Headers for authentication
     headers = {
         'Authorization': f'Bearer {api_key}',
@@ -165,7 +165,7 @@ def create_threads_post(text, user_id, api_key):
     }
 
     escaped_text = escape_text_for_url(text)
-    media_container_id = create_threads_media_container(escaped_text, user_id, headers)
+    media_container_id = create_threads_media_container(escaped_text, article_url, user_id, headers)
 
     if media_container_id is None:
         print('Failed to create media container')
@@ -215,7 +215,7 @@ def publish_articles_to_social_media(articles):
             bsky_post_joiner.add_post(BskyPostData(article_title, article_url), publisher=bsky_publisher)
 
         if config.THREADS_ENABLED:
-            create_threads_post(post_content_concatenated, config.THREADS_USER_ID, config.THREADS_API_KEY)
+            create_threads_post(post_content_concatenated, article_url, config.THREADS_USER_ID, config.THREADS_API_KEY)
 
         if config.MASTODON_ENABLED:
             create_mastodon_status(post_content_concatenated, config.MASTODON_URL, config.MASTODON_ACCESS_TOKEN)
