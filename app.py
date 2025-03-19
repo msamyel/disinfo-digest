@@ -130,6 +130,34 @@ def index_filtered_by_tag(tag):
     )
 
 
+@app.route("/article/<int:article_id>-<title>")
+def view_single_article_with_title(article_id, title):
+    article = Article.query.get(article_id)
+
+    if article.uri_title() != title:
+        return "Page not found", 404
+
+    return render_template('index.html',
+                           title=article.title,
+                           articles=[article],
+                           article_counts=get_article_counts(),
+                           is_single_article=True,
+                           tags_accent_table=TAGS_ACCENT_TABLE,
+                           tag_counts=get_tag_counts_for_all_time())
+
+
+@app.route("/article/<int:article_id>")
+def view_single_article(article_id):
+    article = Article.query.get(article_id)
+    return render_template('index.html',
+                           title=article.title,
+                           articles=[article],
+                           article_counts=get_article_counts(),
+                           is_single_article=True,
+                           tags_accent_table=TAGS_ACCENT_TABLE,
+                           tag_counts=get_tag_counts_for_all_time())
+
+
 @cache.cached(timeout=7200, key_prefix='article_counts')
 def get_article_counts():
     article_counts = (db.session

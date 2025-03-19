@@ -1,4 +1,7 @@
 from app import db
+from unicodedata import normalize
+from string import printable
+import re
 
 
 class Article(db.Model):
@@ -18,6 +21,20 @@ class Article(db.Model):
 
     def __repr__(self):
         return f'<Article {self.title}>'
+
+    def uri_title(self):
+        no_accents = self.remove_accents(self.title)
+        no_spaces = no_accents.replace(' ', '-')
+        return self.replace_non_letters(no_spaces)
+
+    @staticmethod
+    def remove_accents(data):
+        return ''.join(x for x in normalize('NFKD', data) if x in printable).lower()
+
+    @staticmethod
+    def replace_non_letters(data):
+        pattern = re.compile('^[a-zA-Z0-9-]*$')
+        return ''.join(x for x in data if pattern.match(x))
 
     @staticmethod
     def exclude_hidden():

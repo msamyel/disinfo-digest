@@ -39,6 +39,8 @@
         <div class="heading-container">
             {% if is_search %}
             <h2 class="week_id">Výsledky vyhledávání</h2>
+            {% elif is_single_article %}
+            <!-- single article -->
             {% elif date %}
             <h2 class="week_id"><span class="date-to-format" data-date="{{start_day}}" data-format="D. MMMM">></span>
                 –
@@ -69,7 +71,9 @@
             <p class="article__meta">
                 <i class="fas fa-calendar"></i> <span class="date-to-format" data-date="{{ article.published_at_cet }}"
                                                       data-format="dddd LL"></span>
-                <span class="article__domain"><i class="fas fa-link"></i></i> {{ article.domain }}</span>
+                <span class="article__domain"><i class="fas fa-link"></i> {{ article.domain }}</span>
+                <span class="article__domain"><i class="fas fa-hashtag"></i> <a class="article__category__link"
+                                                                                href="/article/{{article.id}}-{{article.uri_title()}}">{{ article.id }}</a></span>
                 {% if article.hashtags %}
                 <span class="article__category"><i class="fas fa-tags"></i> <a class="article__category__link"
                                                                                href="/tags/{{ tags_accent_table[article.hashtags] }}">{{ article.hashtags }}</a></span>
@@ -85,10 +89,12 @@
 
         <div class="pagination-container">
             {% if articles.has_prev %}
-            <div class="prev"><a class="pagination__link" href="{{search_url_base}}page={{articles.prev_num}}">Předchozí stránka</a></div>
+            <div class="prev"><a class="pagination__link" href="{{search_url_base}}page={{articles.prev_num}}">Předchozí
+                stránka</a></div>
             {% endif %}
             {% if articles.has_next %}
-            <div class="next"><a class="pagination__link" href="{{search_url_base}}page={{articles.next_num}}">Další stránka</a></div>
+            <div class="next"><a class="pagination__link" href="{{search_url_base}}page={{articles.next_num}}">Další
+                stránka</a></div>
             {% endif %}
         </div>
     </main>
