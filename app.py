@@ -135,6 +135,9 @@ def index_filtered_by_tag(tag):
 def view_single_article_with_title(article_id, title):
     article = Article.query.get(article_id)
 
+    if article is None:
+        abort(404)
+
     if article.uri_title() != title:
         abort(404)
 
@@ -150,6 +153,10 @@ def view_single_article_with_title(article_id, title):
 @app.route("/article/<int:article_id>")
 def view_single_article(article_id):
     article = Article.query.get(article_id)
+
+    if article is None:
+        abort(404)
+
     return render_template('index.html',
                            title=article.title,
                            articles=[article],
