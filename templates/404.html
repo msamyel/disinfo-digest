@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}
+{{ moment.include_moment() }}
+{{ moment.lang('cs') }}
+<div class="flex-container">
+    <main>
+        <script src='https://cdn.jsdelivr.net/npm/fullcalendar/index.global.min.js'></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.42/moment-timezone-with-data.min.js"></script>
+        <script src="/static/scripts.js"></script>
+
+        <script>
+
+            document.addEventListener('DOMContentLoaded', function() {
+              const calendarEl = document.getElementById('calendar')
+              const calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                firstDay: 1,
+                events: [
+                  {% for article_count in article_counts %}
+                  {
+                    title: '{{ article_count.count }} článků',
+                    start: '{{ article_count.date }}',
+                    url: '/date/{{ article_count.date }}'
+                  },
+                  {% endfor %}
+                ]
+              })
+              calendar.render()
+            })
+
+        </script>
+
+        <h2>Chyba 404</h2>
+        <p>Stránka nebyla nalezena.</p>
+    </main>
+    <aside>
+        <h2>Kategorie</h2>
+        <div class="aside-categories">
+            <ul>
+                {% for tag_accented, tag_unaccented in tags_accent_table.items() %}
+                <li class="post-cat {{'post-cat--selected' if tag_unaccented == tag_filter}}">
+                    <a class="post-cat-text" href="/tags/{{ tag_unaccented }}">{{ tag_accented }}</a>
+                    <span class="post-cat-number">({{ tag_counts[tag_accented] or 0 }})</span></li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div id='calendar'></div>
+        <div id='scroll-shortcuts'>
+            <p><a>2024-08-06</a></p>
+        </div>
+    </aside>
+</div>
+{% endblock %}

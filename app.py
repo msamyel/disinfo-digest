@@ -1,4 +1,4 @@
-from flask import Flask, Response
+from flask import Flask, Response, abort
 from flask_sqlalchemy import SQLAlchemy
 import sqlalchemy as sa
 from config import Config
@@ -14,6 +14,7 @@ from keywords import TAGS_ACCENT_TABLE, get_accented_tag
 
 app = Flask(__name__)
 app.config.from_object(Config)
+
 db = SQLAlchemy(app)
 # js library for localizing time
 moment = Moment(app)
@@ -135,7 +136,7 @@ def view_single_article_with_title(article_id, title):
     article = Article.query.get(article_id)
 
     if article.uri_title() != title:
-        return "Page not found", 404
+        abort(404)
 
     return render_template('index.html',
                            title=article.title,
@@ -227,6 +228,28 @@ def save_articles():
 
     articles_to_publish_urls = [article.url for article in articles_to_publish]
     return json.dumps(articles_to_publish_urls), 200
+
+
+def page_not_found(e):
+    return render_template('404.html',
+                           article_counts=get_article_counts(),
+                           is_single_article=True,
+                           tags_accent_table=TAGS_ACCENT_TABLE,
+                           tag_counts=get_tag_counts_for_all_time()
+                           ), 404
+
+
+def server_error(e):
+    return render_template('500.html',
+                           article_counts=get_article_counts(),
+                           is_single_article=True,
+                           tags_accent_table=TAGS_ACCENT_TABLE,
+                           tag_counts=get_tag_counts_for_all_time()
+                           ), 500
+
+
+app.register_error_handler(404, page_not_found)
+app.register_error_handler(500, server_error)
 
 
 @app.route("/articles/hide", methods=['POST'])
