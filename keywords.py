@@ -200,6 +200,40 @@ TAGS_ACCENT_TABLE = {
     "řetězáky": "retezaky",
 }
 
+TAGS_COLORS_TABLE = {
+    # Disinformation & Propaganda (Green, Yellow)
+    "dezinformace": "#A3E635",  # Bright Green
+    "dezinformátoři": "#FACC15",  # Warm Yellow
+    "propaganda": "#FFDD57",  # Soft Gold
+    "řetězáky": "#FFB703",  # Deep Yellow-Orange
+
+    # Fact-checking & Strategic Communication (Teal, Cyan)
+    "fact-checking": "#00C49A",  # Teal Green
+    "strategická komunikace": "#5CD1E5",  # Light Cyan-Blue
+    "mediální gramotnost": "#00B4D8",  # Bright Sky Blue
+
+    # Cybersecurity & Online Threats (Blue, Cyan)
+    "kyberbezpečnost": "#118AB2",  # Deep Cyan
+    "kyberšikana": "#06D6A0",  # Teal Green
+    "sociální sítě": "#4FD1C5",  # Soft Turquoise
+    "umělá inteligence": "#38BDF8",  # Electric Blue
+
+    # Radicalization, Extremism & Hate Speech (Red, Pink)
+    "radikalizace": "#D90429",  # Bold Red
+    "krajní levice": "#E63946",  # Coral Red
+    "krajní pravice": "#EF476F",  # Pinkish Red
+    "nenávistné komentáře": "#F87171",  # Light Red
+
+    # Fraud & Misinformation (Muted Browns, Orange)
+    "podvod": "#EE9B00",  # Deep Orange
+    "hybridní hrozby": "#F4A261",  # Soft Orange
+    "sexismus": "#D77FA1",  # Muted Pink
+    "terorismus": "#FF595E",  # Vivid Red
+
+    # Freedom of Speech & Ethics (Gold, Beige)
+    "svoboda slova": "#F2C14E",  # Rich Gold
+}
+
 
 def get_accented_tag(unaccented_tag):
     for tag in TAGS_ACCENT_TABLE:

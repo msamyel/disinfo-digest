@@ -10,7 +10,7 @@ import pytz
 import json
 from flask_moment import Moment
 from flask_caching import Cache
-from keywords import TAGS_ACCENT_TABLE, get_accented_tag
+from keywords import TAGS_ACCENT_TABLE, get_accented_tag, TAGS_COLORS_TABLE
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -49,6 +49,71 @@ def index():
         tags_accent_table=TAGS_ACCENT_TABLE,
         tag_counts=get_tag_counts_for_all_time()
     )
+
+
+@app.route("/statistika")
+def statistics():
+    return render_template('timechart.html', datasets=json.dumps(statistics_dataset()))
+
+
+def statistics_dataset():
+    # aggregate tag count by day
+    tag_counts = (db.session
+                  .query(
+        Article.published_at_cet_str.label('date'),
+        Article.hashtags.label('tag'),
+        sa.func.count(Article.id).label('count'))
+                  .filter(Article.is_hidden == False)
+                  .group_by(Article.published_at_cet_str, Article.hashtags)
+                  .order_by(Article.published_at_cet_str)
+                  .all())
+
+    datasets = {}
+    min_date = datetime.datetime.now().replace(tzinfo=pytz.timezone("CET")).replace(tzinfo=None)
+    max_date = datetime.datetime(1970, 1, 1)
+
+    for tag_count in tag_counts:
+        date = datetime.datetime.strptime(tag_count.date, "%Y-%m-%d")
+
+        if date < min_date:
+            min_date = date
+
+        if date > max_date:
+            max_date = date
+
+        if tag_count.tag not in datasets:
+            if tag_count.tag is None:
+                continue
+            new_dataset = {"label": tag_count.tag,
+                           "borderColor": TAGS_COLORS_TABLE[tag_count.tag],
+                           "backgroundColor": TAGS_COLORS_TABLE[tag_count.tag],
+                           "spanGaps": False,
+                           "data": [{
+                               "x": tag_count.date,
+                               "y": tag_count.count
+                           }],
+                           }
+            datasets[tag_count.tag] = new_dataset
+        else:
+            datasets[tag_count.tag]["data"].append({
+                "x": tag_count.date,
+                "y": tag_count.count
+            })
+
+    date = min_date
+    while date <= max_date:
+        for dataset in datasets.values():
+            date_str = date.strftime("%Y-%m-%d")
+            if not any(data["x"] == date_str for data in dataset["data"]):
+                dataset["data"].append({
+                    "x": date.strftime("%Y-%m-%d"),
+                    "y": 0})
+        date = date + datetime.timedelta(days=1)
+
+    for dataset in datasets.values():
+        dataset["data"] = sorted(dataset["data"], key=lambda x: x["x"])
+
+    return list(datasets.values())
 
 
 def get_newest_articles():
