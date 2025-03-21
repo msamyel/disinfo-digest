@@ -18,27 +18,18 @@
     datasets: {{ datasets|safe }}
     };
 
-    function findMinValue(arr, property) {
-        return arr.reduce((min, obj) => {
-            return obj[property] < min ? obj[property] : min;
-        }, Infinity);
-    }
-
             const chart = new Chart(ctx, {
     type: 'line',
     data: data,
     options: {
         scales: {
-            x: {
-                type: 'time',
-                time: {
-                    unit: 'month'
-                }
+            y: {
+
             }
         },
         elements: {
                     point:{
-                        radius: 0
+                        radius: 3
                     }
         },
         showLine: true,

@@ -60,12 +60,13 @@ def statistics_dataset():
     # aggregate tag count by day
     tag_counts = (db.session
                   .query(
-        Article.published_at_cet_str.label('date'),
+        sa.extract('year', Article.published_at_cet).label('year'),
+        sa.extract('month', Article.published_at_cet).label('month'),
         Article.hashtags.label('tag'),
         sa.func.count(Article.id).label('count'))
                   .filter(Article.is_hidden == False)
-                  .group_by(Article.published_at_cet_str, Article.hashtags)
-                  .order_by(Article.published_at_cet_str)
+                  .group_by(Article.hashtags,
+                            sa.extract('year', Article.published_at_cet), sa.extract('month', Article.published_at_cet))
                   .all())
 
     datasets = {}
@@ -73,7 +74,7 @@ def statistics_dataset():
     max_date = datetime.datetime(1970, 1, 1)
 
     for tag_count in tag_counts:
-        date = datetime.datetime.strptime(tag_count.date, "%Y-%m-%d")
+        date = datetime.datetime.strptime(str(tag_count.year) + "-" + str(tag_count.month) + "-01", "%Y-%m-%d")
 
         if date < min_date:
             min_date = date
@@ -89,14 +90,14 @@ def statistics_dataset():
                            "backgroundColor": TAGS_COLORS_TABLE[tag_count.tag],
                            "spanGaps": False,
                            "data": [{
-                               "x": tag_count.date,
+                               "x": date.strftime("%Y-%m-%d"),
                                "y": tag_count.count
                            }],
                            }
             datasets[tag_count.tag] = new_dataset
         else:
             datasets[tag_count.tag]["data"].append({
-                "x": tag_count.date,
+                "x": date.strftime("%Y-%m-%d"),
                 "y": tag_count.count
             })
 
@@ -108,7 +109,8 @@ def statistics_dataset():
                 dataset["data"].append({
                     "x": date.strftime("%Y-%m-%d"),
                     "y": 0})
-        date = date + datetime.timedelta(days=1)
+        # add 1 month
+        date = datetime.datetime(date.year + int(date.month / 12), ((date.month % 12) + 1), 1)
 
     for dataset in datasets.values():
         dataset["data"] = sorted(dataset["data"], key=lambda x: x["x"])
