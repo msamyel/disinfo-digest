@@ -59,6 +59,9 @@ header img.logo {
 main {
     min-height: 80vh;
     flex: 3;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    white-space: normal;
 }
 
 .heading-container {
